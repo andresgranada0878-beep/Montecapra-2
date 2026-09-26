@@ -2,9 +2,10 @@
   <section
     id="MontecapraHero-{{ section.id }}"
     class="montecapra-hero"
+    data-content-animation="{{ section.settings.content_animation }}"
   >
     <div class="montecapra-hero__container">
-      <montecapra-hero-slideshow class="montecapra-hero__frame" data-section-id="{{ section.id }}" style="--hero-height: {{ section.settings.hero_height }}px;">
+      <montecapra-hero-slideshow class="montecapra-hero__frame" data-section-id="{{ section.id }}" style="--hero-height: {{ section.settings.hero_height }}px; --hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-fade-duration: {{ section.settings.fade_duration }}ms; --hero-ken-burns-duration: {{ section.settings.ken_burns_duration | times: 1000 }}ms;">
         <div class="montecapra-hero__slides" id="MontecapraHeroSlides-{{ section.id }}" aria-live="polite">
           {% for block in section.blocks %}
             {% liquid
@@ -62,6 +63,9 @@
               <div class="montecapra-hero__shade"></div>
               <div class="montecapra-hero__content" data-content-position="{{ block.settings.content_position }}">
                 <div class="montecapra-hero__content-inner">
+                  {% if block.settings.eyebrow != blank %}
+                    <p class="montecapra-hero__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+                  {% endif %}
                   {% if block.settings.title != blank %}
                     {% if forloop.first %}
                       <h1 class="montecapra-hero__title">{{ block.settings.title | escape }}</h1>
@@ -145,14 +149,14 @@
     z-index: 0;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 500ms ease, visibility 0s linear 500ms;
+    transition: opacity var(--hero-fade-duration, 500ms) ease, visibility 0s linear var(--hero-fade-duration, 500ms);
   }
 
   .montecapra-hero__slide.is-active {
     z-index: 1;
     opacity: 1;
     visibility: visible;
-    transition: opacity 500ms ease, visibility 0s;
+    transition: opacity var(--hero-fade-duration, 500ms) ease, visibility 0s;
   }
 
   .montecapra-hero__media,
@@ -170,9 +174,50 @@
     object-fit: cover;
   }
 
+  .montecapra-hero__slide.is-active .montecapra-hero__image {
+    animation: montecapra-hero-ken-burns var(--hero-ken-burns-duration, 12000ms) ease-out both;
+  }
+
+  .montecapra-hero__eyebrow {
+    margin: 0 0 16px;
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  @keyframes montecapra-hero-ken-burns {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+
+  @keyframes montecapra-hero-content-rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes montecapra-hero-content-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #MontecapraHero-{{ section.id }}[data-content-animation='fade-up'] .montecapra-hero__slide.is-active .montecapra-hero__content-inner > * {
+    animation: montecapra-hero-content-rise 700ms ease both;
+  }
+
+  #MontecapraHero-{{ section.id }}[data-content-animation='fade'] .montecapra-hero__slide.is-active .montecapra-hero__content-inner > * {
+    animation: montecapra-hero-content-fade 700ms ease both;
+  }
+
+  #MontecapraHero-{{ section.id }} .montecapra-hero__eyebrow { animation-delay: 0ms; }
+  #MontecapraHero-{{ section.id }} .montecapra-hero__title { animation-delay: 100ms; }
+  #MontecapraHero-{{ section.id }} .montecapra-hero__text { animation-delay: 200ms; }
+  #MontecapraHero-{{ section.id }} .montecapra-hero__button { animation-delay: 300ms; }
+
   .montecapra-hero__shade {
     z-index: 1;
-    background: rgba(24, 16, 11, 0.28);
+    background: rgba(24, 16, 11, var(--hero-overlay-opacity, 0.28));
     pointer-events: none;
   }
 
@@ -350,6 +395,11 @@
     .montecapra-hero__slide {
       transition: none;
     }
+
+    .montecapra-hero__slide.is-active .montecapra-hero__image,
+    .montecapra-hero__content-inner > * {
+      animation: none !important;
+    }
   }
 {% endstylesheet %}
 
@@ -360,6 +410,20 @@
         this.slides = Array.from(this.querySelectorAll('[data-hero-slide]'));
         this.dots = Array.from(this.querySelectorAll('[data-hero-dot]'));
         this.currentIndex = 0;
+        this.motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+        this.handleMotionPreferenceChange = () => {
+          const activeSlide = this.slides[this.currentIndex] || this.slides[0];
+          const activeVideo = activeSlide?.querySelector('video');
+          if (!activeVideo) return;
+
+          if (this.motionPreference.matches) {
+            activeVideo.pause();
+          } else {
+            activeVideo.play().catch(() => {});
+          }
+        };
+        this.motionPreference.addEventListener('change', this.handleMotionPreferenceChange);
+        this.handleMotionPreferenceChange();
 
         if (this.slides.length < 2 || this.dataset.initialized === 'true') return;
         this.dataset.initialized = 'true';
@@ -382,6 +446,10 @@
         this.showSlide(0);
       }
 
+      disconnectedCallback() {
+        this.motionPreference?.removeEventListener('change', this.handleMotionPreferenceChange);
+      }
+
       showSlide(index) {
         this.currentIndex = (index + this.slides.length) % this.slides.length;
 
@@ -394,7 +462,7 @@
           const video = slide.querySelector('video');
           if (!video) return;
 
-          if (!isActive || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          if (!isActive || this.motionPreference.matches) {
             video.pause();
           } else {
             video.play().catch(() => {});
@@ -416,6 +484,47 @@
   "name": "Hero slideshow MC",
   "max_blocks": 6,
   "settings": [
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacidad del overlay",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "fade_duration",
+      "min": 200,
+      "max": 1200,
+      "step": 100,
+      "unit": "ms",
+      "label": "Duración del fade",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "ken_burns_duration",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "s",
+      "label": "Duración Ken Burns",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "content_animation",
+      "label": "Animación del contenido",
+      "options": [
+        { "value": "fade-up", "label": "Entrada ascendente" },
+        { "value": "fade", "label": "Fundido" },
+        { "value": "none", "label": "Sin animación" }
+      ],
+      "default": "fade-up"
+    },
     {
       "type": "range",
       "id": "hero_height",
@@ -446,6 +555,11 @@
           "type": "video",
           "id": "video",
           "label": "Video (opcional)"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
         },
         {
           "type": "text",
