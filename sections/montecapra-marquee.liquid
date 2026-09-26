@@ -1,0 +1,181 @@
+{% liquid
+  assign has_messages = false
+  for block in section.blocks
+    if block.settings.text != blank
+      assign has_messages = true
+      break
+    endif
+  endfor
+%}
+
+{% if has_messages %}
+  <div
+    id="MontecapraMarquee-{{ section.id }}"
+    class="montecapra-marquee"
+    style="--montecapra-marquee-background: {{ section.settings.background_color }}; --montecapra-marquee-text: {{ section.settings.text_color }}; --montecapra-marquee-gap: {{ section.settings.item_gap }}px; --montecapra-marquee-duration: {{ section.settings.speed | times: 1000 }}ms;"
+  >
+    <div class="montecapra-marquee__viewport">
+      <div class="montecapra-marquee__track">
+        {% for group_index in (1..2) %}
+          <div class="montecapra-marquee__group"{% if group_index == 2 %} aria-hidden="true"{% endif %}>
+            {% for block in section.blocks %}
+              {% if block.settings.text != blank %}
+                <span class="montecapra-marquee__message"{% if group_index == 1 %} {{ block.shopify_attributes }}{% endif %}>
+                  {{ block.settings.text }}
+                </span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .montecapra-marquee {
+    width: 100%;
+    overflow: hidden;
+    padding: 18px 0;
+    background: var(--montecapra-marquee-background, #23160f);
+    color: var(--montecapra-marquee-text, #faf8f3);
+  }
+
+  .montecapra-marquee__viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .montecapra-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: montecapra-marquee-scroll var(--montecapra-marquee-duration, 28000ms) linear infinite;
+    will-change: transform;
+  }
+
+  .montecapra-marquee__group {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--montecapra-marquee-gap, 32px);
+    padding-right: var(--montecapra-marquee-gap, 32px);
+  }
+
+  .montecapra-marquee__message {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--montecapra-marquee-gap, 32px);
+    white-space: nowrap;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .montecapra-marquee__message::after {
+    width: 5px;
+    height: 5px;
+    flex: 0 0 5px;
+    border-radius: 50%;
+    background: currentColor;
+    content: '';
+    opacity: 0.65;
+  }
+
+  .montecapra-marquee:hover .montecapra-marquee__track {
+    animation-play-state: paused;
+  }
+
+  @keyframes montecapra-marquee-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .montecapra-marquee {
+      padding: 15px 0;
+    }
+
+    .montecapra-marquee__message {
+      font-size: 13px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .montecapra-marquee__track {
+      animation: none;
+      transform: none;
+      will-change: auto;
+    }
+
+    .montecapra-marquee__group[aria-hidden='true'] {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Marquee Montecapra",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fondo",
+      "default": "#23160F"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#FAF8F3"
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "min": 12,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Separación entre mensajes",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "unit": "s",
+      "label": "Duración del ciclo",
+      "default": 28
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Mensaje",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Texto"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Montecapra",
+      "blocks": [
+        { "type": "message" },
+        { "type": "message" },
+        { "type": "message" },
+        { "type": "message" }
+      ]
+    }
+  ]
+}
+{% endschema %}
