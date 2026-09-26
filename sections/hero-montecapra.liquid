@@ -1,0 +1,232 @@
+<section class="montecapra-hero-editorial">
+
+  <div class="montecapra-hero-editorial-contenedor">
+
+    <div class="montecapra-hero-editorial-card">
+
+      {% if section.settings.imagen != blank %}
+        {{
+          section.settings.imagen
+          | image_url: width: 2400
+          | image_tag:
+            loading: 'eager',
+            class: 'montecapra-hero-editorial-imagen'
+        }}
+      {% endif %}
+
+    </div>
+
+
+    <div class="montecapra-hero-editorial-contenido">
+
+      {% if section.settings.eyebrow != blank %}
+        <span class="montecapra-hero-editorial-eyebrow">
+          {{ section.settings.eyebrow }}
+        </span>
+      {% endif %}
+
+
+      {% if section.settings.titulo != blank %}
+        <h1 class="montecapra-hero-editorial-titulo">
+          {{ section.settings.titulo }}
+        </h1>
+      {% endif %}
+
+
+      {% if section.settings.descripcion != blank %}
+        <p class="montecapra-hero-editorial-descripcion">
+          {{ section.settings.descripcion }}
+        </p>
+      {% endif %}
+
+
+      {% if section.settings.boton_texto != blank %}
+        <a 
+          href="{{ section.settings.boton_link }}"
+          class="montecapra-hero-editorial-boton">
+          {{ section.settings.boton_texto }}
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</section>
+
+
+{% stylesheet %}
+
+.montecapra-hero-editorial {
+  background: #FAF8F3 !important;
+  padding: 40px 24px 100px !important;
+}
+
+
+.montecapra-hero-editorial-contenedor {
+  max-width: 1500px !important;
+  margin: 0 auto !important;
+}
+
+
+.montecapra-hero-editorial-card {
+  overflow: hidden !important;
+  border-radius: 48px !important;
+}
+
+
+.montecapra-hero-editorial-imagen {
+  width: 100% !important;
+  height: 460px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+
+.montecapra-hero-editorial-contenido {
+  max-width: 900px !important;
+  margin: 42px auto 0 !important;
+  text-align: center !important;
+}
+
+
+.montecapra-hero-editorial-eyebrow {
+  display: block !important;
+  font-size: 12px !important;
+  letter-spacing: 5px !important;
+  text-transform: uppercase !important;
+  color: #6B6258 !important;
+  margin-bottom: 20px !important;
+}
+
+
+.montecapra-hero-editorial-titulo {
+  font-size: clamp(40px,5vw,72px) !important;
+  font-weight: 400 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -1px !important;
+  color: #241914 !important;
+  margin: 0 auto 24px !important;
+  max-width: 850px !important;
+}
+
+
+.montecapra-hero-editorial-descripcion {
+  max-width: 600px !important;
+  margin: 0 auto 34px !important;
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+  color: #5E554D !important;
+}
+
+
+.montecapra-hero-editorial-boton {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #241914 !important;
+  color: #FAF8F3 !important;
+  padding: 16px 42px !important;
+  border-radius: 999px !important;
+  text-decoration: none !important;
+  transition: transform .3s ease !important;
+}
+
+
+.montecapra-hero-editorial-boton:hover {
+  transform: scale(1.02) !important;
+}
+
+
+@media (max-width: 749px) {
+
+  .montecapra-hero-editorial {
+    padding: 24px 16px 56px !important;
+  }
+
+
+  .montecapra-hero-editorial-card {
+    border-radius: 24px !important;
+  }
+
+
+  .montecapra-hero-editorial-imagen {
+    height: 360px !important;
+  }
+
+
+  .montecapra-hero-editorial-contenido {
+    margin-top: 32px !important;
+  }
+
+
+  .montecapra-hero-editorial-titulo {
+    font-size: 38px !important;
+  }
+
+
+  .montecapra-hero-editorial-descripcion {
+    font-size: 16px !important;
+  }
+
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .montecapra-hero-editorial-boton {
+    transition: none !important;
+  }
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "Hero Montecapra Editorial",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "imagen",
+      "label": "Imagen hero"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto superior",
+      "default": "Café colombiano de origen"
+    },
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título",
+      "default": "Una experiencia de café excepcional"
+    },
+    {
+      "type": "textarea",
+      "id": "descripcion",
+      "label": "Descripción",
+      "default": "Café colombiano seleccionado desde nuestro territorio."
+    },
+    {
+      "type": "text",
+      "id": "boton_texto",
+      "label": "Texto botón",
+      "default": "Descubrir café"
+    },
+    {
+      "type": "url",
+      "id": "boton_link",
+      "label": "Enlace botón"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Montecapra Editorial"
+    }
+  ]
+}
+{% endschema %}

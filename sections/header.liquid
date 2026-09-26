@@ -1,0 +1,192 @@
+<header class="montecapra-header">
+
+  <div class="montecapra-announcement">
+    <p>{{ section.settings.announcement_text }}</p>
+  </div>
+
+  <div class="montecapra-header-principal">
+
+    <div class="montecapra-header-izquierda">
+      <button class="montecapra-menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <a href="{{ routes.search_url }}" class="montecapra-busqueda">
+        Buscar
+      </a>
+    </div>
+
+    <a href="{{ routes.root_url }}" class="montecapra-logo">
+      {% if section.settings.logo != blank %}
+        {{ section.settings.logo | image_url: width: 400 | image_tag }}
+      {% else %}
+        Montecapra
+      {% endif %}
+    </a>
+
+    <div class="montecapra-header-derecha">
+
+      <a href="{{ routes.account_url }}" class="montecapra-icono">
+        Cuenta
+      </a>
+
+      <a href="{{ routes.cart_url }}" class="montecapra-icono">
+        Bolsa
+      </a>
+
+    </div>
+
+  </div>
+
+  <nav class="montecapra-navegacion">
+    {% for link in section.settings.menu.links %}
+      <a href="{{ link.url }}">
+        {{ link.title }}
+      </a>
+    {% endfor %}
+  </nav>
+
+</header>
+
+
+{% stylesheet %}
+
+.montecapra-header {
+  width:100% !important;
+  background:#FAF8F3 !important;
+}
+
+.montecapra-announcement {
+  background:#C6A86B !important;
+  padding:12px 20px !important;
+  text-align:center !important;
+}
+
+.montecapra-announcement p {
+  margin:0 !important;
+  font-size:14px !important;
+  letter-spacing:1px !important;
+}
+
+.montecapra-header-principal {
+  max-width:1600px !important;
+  margin:0 auto !important;
+  padding:35px 40px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+}
+
+.montecapra-header-izquierda,
+.montecapra-header-derecha {
+  display:flex !important;
+  align-items:center !important;
+  gap:24px !important;
+}
+
+.montecapra-menu {
+  background:none !important;
+  border:0 !important;
+  padding:0 !important;
+}
+
+.montecapra-menu span {
+  display:block !important;
+  width:25px !important;
+  height:1px !important;
+  background:#23160F !important;
+  margin:6px 0 !important;
+}
+
+.montecapra-busqueda,
+.montecapra-icono {
+  color:#23160F !important;
+  text-decoration:none !important;
+  font-size:13px !important;
+  letter-spacing:1px !important;
+}
+
+.montecapra-logo {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.montecapra-logo img {
+  max-width:220px !important;
+  height:auto !important;
+}
+
+.montecapra-navegacion {
+  border-top:1px solid rgba(35,22,15,.12) !important;
+  border-bottom:1px solid rgba(35,22,15,.12) !important;
+  display:flex !important;
+  justify-content:center !important;
+  gap:45px !important;
+  padding:22px !important;
+}
+
+.montecapra-navegacion a {
+  color:#23160F !important;
+  text-decoration:none !important;
+  text-transform:uppercase !important;
+  letter-spacing:2px !important;
+  font-size:12px !important;
+}
+
+
+@media(max-width:749px){
+
+.montecapra-header-principal {
+padding:25px 20px !important;
+}
+
+.montecapra-busqueda {
+display:none !important;
+}
+
+.montecapra-logo img {
+max-width:160px !important;
+}
+
+.montecapra-navegacion {
+gap:18px !important;
+overflow:auto !important;
+justify-content:flex-start !important;
+}
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "Header Montecapra",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Texto barra superior",
+      "default": "Café colombiano de origen"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menú navegación"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header Montecapra"
+    }
+  ]
+}
+{% endschema %}

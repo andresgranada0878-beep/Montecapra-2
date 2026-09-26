@@ -1,0 +1,93 @@
+:root {
+  --montecapra-fondo: #faf8f3;
+  --montecapra-blanco: #ffffff;
+  --montecapra-cafe: #29170f;
+  --montecapra-cafe-suave: #49352a;
+  --montecapra-dorado: #c3a15d;
+  --montecapra-verde: #46543d;
+
+  --montecapra-ancho: 1600px;
+
+  --montecapra-radio-grande: 32px;
+  --montecapra-radio-medio: 24px;
+  --montecapra-radio-pequeno: 16px;
+
+  --montecapra-espacio-seccion: 64px;
+  --montecapra-espacio-contenido: 20px;
+
+  --montecapra-sombra:
+    0 8px 30px rgba(41, 23, 15, 0.06);
+
+  --montecapra-transicion:
+    250ms ease;
+}
+
+html {
+  scroll-behavior: smooth !important;
+}
+
+body {
+  background: var(--montecapra-fondo) !important;
+}
+
+.montecapra-contenedor {
+  width: calc(100% - 40px) !important;
+  max-width: var(--montecapra-ancho) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.montecapra-seccion {
+  padding-top: var(--montecapra-espacio-seccion) !important;
+  padding-bottom: var(--montecapra-espacio-seccion) !important;
+}
+
+.montecapra-imagen-redondeada {
+  overflow: hidden !important;
+  border-radius: var(--montecapra-radio-grande) !important;
+}
+
+.montecapra-tarjeta {
+  background: var(--montecapra-blanco) !important;
+  border-radius: var(--montecapra-radio-medio) !important;
+  box-shadow: var(--montecapra-sombra) !important;
+  overflow: hidden !important;
+}
+
+@media screen and (min-width: 749px) {
+  :root {
+    --montecapra-espacio-seccion: 72px;
+    --montecapra-espacio-contenido: 32px;
+  }
+
+  .montecapra-contenedor {
+    width: calc(100% - 64px) !important;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  :root {
+    --montecapra-espacio-seccion: 88px;
+    --montecapra-espacio-contenido: 48px;
+    --montecapra-radio-grande: 40px;
+  }
+
+  .montecapra-contenedor {
+    width: calc(100% - 96px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,181 @@
+<section class="montecapra-productos">
+
+<div class="montecapra-productos-container">
+
+<h2>
+{{ section.settings.titulo }}
+</h2>
+
+
+<div class="montecapra-productos-grid">
+
+
+{% for block in section.blocks %}
+
+{% assign producto = block.settings.producto %}
+
+
+{% if producto != blank %}
+
+
+<div class="montecapra-card">
+
+
+<a href="{{ producto.url }}">
+
+<img 
+src="{{ producto.featured_image | image_url: '800x' }}"
+alt="{{ producto.title }}"
+loading="lazy">
+
+</a>
+
+
+<h3>
+{{ producto.title }}
+</h3>
+
+
+{% if producto.metafields.custom.descripcion != blank %}
+
+<p>
+{{ producto.metafields.custom.descripcion }}
+</p>
+
+{% endif %}
+
+
+<a class="boton" href="{{ producto.url }}">
+Comprar café
+</a>
+
+
+</div>
+
+
+{% endif %}
+
+
+{% endfor %}
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+{% stylesheet %}
+
+.montecapra-productos{
+
+background:#faf8f3;
+padding:80px 24px;
+
+}
+
+
+.montecapra-productos-container{
+
+max-width:1500px;
+margin:auto;
+
+}
+
+
+.montecapra-productos-grid{
+
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:24px;
+
+}
+
+
+.montecapra-card{
+
+background:white;
+padding:20px;
+border-radius:30px;
+
+}
+
+
+.montecapra-card img{
+
+width:100%;
+border-radius:20px;
+
+}
+
+
+.boton{
+
+display:block;
+background:#241914;
+color:white;
+padding:14px;
+border-radius:50px;
+text-align:center;
+text-decoration:none;
+
+}
+
+
+@media(max-width:900px){
+
+.montecapra-productos-grid{
+
+display:flex;
+overflow:auto;
+
+}
+
+.montecapra-card{
+
+min-width:300px;
+
+}
+
+}
+
+{% endstylesheet %}
+
+
+
+{% schema %}
+{
+"name":"Productos MonteCapra",
+"settings":[
+{
+"type":"text",
+"id":"titulo",
+"label":"Título",
+"default":"Nuestros cafés"
+}
+],
+
+"blocks":[
+{
+"type":"producto",
+"name":"Producto",
+"settings":[
+{
+"type":"product",
+"id":"producto",
+"label":"Producto"
+}
+]
+}
+],
+
+"presets":[
+{
+"name":"Productos MonteCapra"
+}
+]
+
+}
+{% endschema %}
