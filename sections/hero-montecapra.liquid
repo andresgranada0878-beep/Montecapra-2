@@ -4,7 +4,7 @@
     class="montecapra-hero"
   >
     <div class="montecapra-hero__container">
-      <montecapra-hero-slideshow class="montecapra-hero__frame" data-section-id="{{ section.id }}">
+      <montecapra-hero-slideshow class="montecapra-hero__frame" data-section-id="{{ section.id }}" style="--hero-height: {{ section.settings.hero_height }}px;">
         <div class="montecapra-hero__slides" id="MontecapraHeroSlides-{{ section.id }}" aria-live="polite">
           {% for block in section.blocks %}
             {% liquid
@@ -16,12 +16,13 @@
               endif
             %}
             <article
-              class="montecapra-hero__slide"
+              class="montecapra-hero__slide{% if forloop.first %} is-active{% endif %}"
               data-hero-slide
               data-content-position="{{ block.settings.content_position }}"
               aria-roledescription="slide"
               aria-label="{{ forloop.index }} de {{ section.blocks.size }}"
-              {% unless forloop.first %}hidden{% endunless %}
+              aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+              {% unless forloop.first %}inert{% endunless %}
               {{ block.shopify_attributes }}
             >
               <div class="montecapra-hero__media" aria-hidden="true">
@@ -124,7 +125,7 @@
   .montecapra-hero__frame {
     position: relative;
     display: block;
-    height: clamp(520px, 58vw, 760px);
+    height: var(--hero-height, 760px);
     overflow: hidden;
     border-radius: 32px;
     background: #23160f;
@@ -140,8 +141,18 @@
     inset: 0;
   }
 
-  .montecapra-hero__slide[hidden] {
-    display: none;
+  .montecapra-hero__slide {
+    z-index: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 500ms ease, visibility 0s linear 500ms;
+  }
+
+  .montecapra-hero__slide.is-active {
+    z-index: 1;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 500ms ease, visibility 0s;
   }
 
   .montecapra-hero__media,
@@ -247,11 +258,12 @@
   .montecapra-hero__controls {
     position: absolute;
     z-index: 3;
-    right: 24px;
+    left: 50%;
     bottom: 24px;
     display: flex;
     align-items: center;
     gap: 12px;
+    transform: translateX(-50%);
   }
 
   .montecapra-hero__arrow,
@@ -311,7 +323,8 @@
     }
 
     .montecapra-hero__frame {
-      height: 560px;
+      height: min(var(--hero-height, 560px), 72vh);
+      min-height: 460px;
       border-radius: 24px;
     }
 
@@ -328,13 +341,13 @@
     }
 
     .montecapra-hero__controls {
-      right: 18px;
       bottom: 18px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .montecapra-hero__button {
+    .montecapra-hero__button,
+    .montecapra-hero__slide {
       transition: none;
     }
   }
@@ -374,7 +387,9 @@
 
         this.slides.forEach((slide, slideIndex) => {
           const isActive = slideIndex === this.currentIndex;
-          slide.hidden = !isActive;
+          slide.classList.toggle('is-active', isActive);
+          slide.setAttribute('aria-hidden', String(!isActive));
+          slide.inert = !isActive;
 
           const video = slide.querySelector('video');
           if (!video) return;
@@ -400,7 +415,18 @@
 {
   "name": "Hero slideshow MC",
   "max_blocks": 6,
-  "settings": [],
+  "settings": [
+    {
+      "type": "range",
+      "id": "hero_height",
+      "min": 520,
+      "max": 1000,
+      "step": 40,
+      "unit": "px",
+      "label": "Altura del hero",
+      "default": 760
+    }
+  ],
   "blocks": [
     {
       "type": "slide",

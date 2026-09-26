@@ -1,1 +1,113 @@
-{"sections":{"image_banner":{"type":"image-banner","disabled":true,"settings":{"image_overlay_opacity":40,"image_height":"large","image_behavior":"none","desktop_content_position":"bottom-center","desktop_content_alignment":"center","show_text_box":false,"color_scheme":"scheme-3","stack_images_on_mobile":false,"mobile_content_alignment":"center","show_text_below":false}},"hero_montecapra_dbdkw9":{"type":"hero-montecapra","name":"Hero Montecapra","settings":{"imagen":"shopify:\/\/shop_images\/header-montecapra-c-psulas-de-caf-colombiano.png","eyebrow":"Café colombiano de origen","titulo":"Una experiencia de café excepcional","descripcion":"Café colombiano seleccionado desde nuestro territorio.","boton_texto":"Descubrir café","boton_link":""}},"montecapra_productos_editorial_HLHyyd":{"type":"montecapra-productos-editorial","blocks":{"producto_XwzGFd":{"type":"producto","settings":{"producto":""}},"producto_Wz9Qrf":{"type":"producto","settings":{"producto":""}},"producto_gYDPMe":{"type":"producto","settings":{"producto":""}},"producto_TrrCn4":{"type":"producto","settings":{"producto":""}},"producto_YEcpCU":{"type":"producto","settings":{"producto":""}}},"block_order":["producto_XwzGFd","producto_Wz9Qrf","producto_gYDPMe","producto_TrrCn4","producto_YEcpCU"],"name":"Productos MonteCapra","settings":{"titulo":"Nuestros cafés"}}},"order":["image_banner","hero_montecapra_dbdkw9","montecapra_productos_editorial_HLHyyd"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "disabled": true,
+      "settings": {
+        "image_overlay_opacity": 40,
+        "image_height": "large",
+        "image_behavior": "none",
+        "desktop_content_position": "bottom-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": false,
+        "color_scheme": "scheme-3",
+        "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
+        "show_text_below": false
+      }
+    },
+    "hero_montecapra_dbdkw9": {
+      "type": "hero-montecapra",
+      "blocks": {
+        "slide_jDG46D": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/BQP-tdYj_978H5K93bANimDpb1WS1p2varYe7JngMxN6Z59ZDOXYlqPUV7WW7uZpirt3ftDezSPZ8flFSAcoSzhhHATiZsdCex7brKmwJCrZctsUq5oq7L2WyHowFBRddEICYg7qqfO0o7iAStw5l99EHwOJePd3a45Thzn9a-cBA5jwBtCsBYg.jpg",
+            "title": "Café colombiano de origen",
+            "text": "<p>Una experiencia de café de especialidad desde las montañas de Colombia.</p>",
+            "button_label": "Descubre nuestro café",
+            "link": "shopify://collections/all",
+            "content_position": "middle-left"
+          }
+        },
+        "slide_RWwRdx": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/header-montecapra-c-psulas-de-caf-colombiano.png",
+            "title": "",
+            "text": "",
+            "button_label": "",
+            "link": "",
+            "content_position": "middle-left"
+          }
+        }
+      },
+      "block_order": [
+        "slide_jDG46D",
+        "slide_RWwRdx"
+      ],
+      "name": "Hero Montecapra",
+      "settings": {}
+    },
+    "montecapra_productos_editorial_HLHyyd": {
+      "type": "montecapra-productos-editorial",
+      "blocks": {
+        "producto_XwzGFd": {
+          "type": "producto",
+          "settings": {
+            "producto": ""
+          }
+        },
+        "producto_Wz9Qrf": {
+          "type": "producto",
+          "settings": {
+            "producto": ""
+          }
+        },
+        "producto_gYDPMe": {
+          "type": "producto",
+          "settings": {
+            "producto": ""
+          }
+        },
+        "producto_TrrCn4": {
+          "type": "producto",
+          "settings": {
+            "producto": ""
+          }
+        },
+        "producto_YEcpCU": {
+          "type": "producto",
+          "settings": {
+            "producto": ""
+          }
+        }
+      },
+      "block_order": [
+        "producto_XwzGFd",
+        "producto_Wz9Qrf",
+        "producto_gYDPMe",
+        "producto_TrrCn4",
+        "producto_YEcpCU"
+      ],
+      "name": "Productos MonteCapra",
+      "settings": {
+        "titulo": "Nuestros cafés"
+      }
+    }
+  },
+  "order": [
+    "image_banner",
+    "hero_montecapra_dbdkw9",
+    "montecapra_productos_editorial_HLHyyd"
+  ]
+}
