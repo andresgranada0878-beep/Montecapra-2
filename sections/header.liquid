@@ -1,30 +1,54 @@
 <header class="montecapra-header">
 
   <div class="montecapra-announcement">
-    <p>{{ section.settings.announcement_text }}</p>
+    <div class="montecapra-announcement-left">
+      <a href="{{ section.settings.instagram_url | default: '#' }}" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://wa.me/573235010624" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a href="{{ section.settings.rappi_url | default: '#' }}" target="_blank" rel="noopener noreferrer">Rappi</a>
+    </div>
+
+    <div class="montecapra-announcement-center">
+      <span>Obt&#233;n 10% OFF en tu primera compra</span>
+      <strong>C&#243;digo: {{ section.settings.discount_code | default: 'MONTE10' }}</strong>
+    </div>
+
+    <div class="montecapra-announcement-right">&#127464;&#127476; Colombia</div>
   </div>
+
+
 
   <div class="montecapra-header-principal">
 
+
     <div class="montecapra-header-izquierda">
+
       <button class="montecapra-menu" aria-label="Menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
 
+
       <a href="{{ routes.search_url }}" class="montecapra-busqueda">
         Buscar
       </a>
+
     </div>
 
+
+
     <a href="{{ routes.root_url }}" class="montecapra-logo">
+
       {% if section.settings.logo != blank %}
         {{ section.settings.logo | image_url: width: 400 | image_tag }}
       {% else %}
         Montecapra
       {% endif %}
+
     </a>
+
+
+
 
     <div class="montecapra-header-derecha">
 
@@ -32,134 +56,314 @@
         Cuenta
       </a>
 
+
       <a href="{{ routes.cart_url }}" class="montecapra-icono">
         Bolsa
       </a>
 
     </div>
 
+
   </div>
 
+
+
+
   <nav class="montecapra-navegacion">
+
     {% for link in section.settings.menu.links %}
+
       <a href="{{ link.url }}">
         {{ link.title }}
       </a>
+
     {% endfor %}
+
   </nav>
+
 
 </header>
 
 
+
+
 {% stylesheet %}
 
+
 .montecapra-header {
-  width:100% !important;
-  background:#FAF8F3 !important;
+  width:100%;
+  background:#FAF8F3;
 }
+
+
 
 .montecapra-announcement {
-  background:#C6A86B !important;
-  padding:12px 20px !important;
-  text-align:center !important;
+  width:calc(100% - 32px);
+  max-width:1600px;
+  min-height:52px;
+  margin:18px auto 0;
+  padding:0 24px;
+  border-radius:30px;
+  background:#23160F;
+  color:#FAF8F3;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:16px;
+  font-size:12px;
+  letter-spacing:.04em;
 }
 
-.montecapra-announcement p {
-  margin:0 !important;
-  font-size:14px !important;
-  letter-spacing:1px !important;
+.montecapra-announcement a {
+  color:#FAF8F3;
+  text-decoration:none;
 }
+
+.montecapra-announcement-left {
+  display:flex;
+  align-items:center;
+  gap:16px;
+  white-space:nowrap;
+}
+
+.montecapra-announcement-center {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.montecapra-announcement-center strong {
+  color:#C6A86B;
+}
+
+.montecapra-announcement-right {
+  justify-self:end;
+  white-space:nowrap;
+}
+
+
+
+
 
 .montecapra-header-principal {
-  max-width:1600px !important;
-  margin:0 auto !important;
-  padding:35px 40px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
+
+  max-width:1600px;
+
+  margin:0 auto;
+
+  padding:35px 40px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
 }
+
+
+
 
 .montecapra-header-izquierda,
 .montecapra-header-derecha {
-  display:flex !important;
-  align-items:center !important;
-  gap:24px !important;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:24px;
+
 }
+
+
+
+
 
 .montecapra-menu {
-  background:none !important;
-  border:0 !important;
-  padding:0 !important;
+
+  background:none;
+
+  border:0;
+
+  padding:0;
+
+  cursor:pointer;
+
 }
 
+
+
 .montecapra-menu span {
-  display:block !important;
-  width:25px !important;
-  height:1px !important;
-  background:#23160F !important;
-  margin:6px 0 !important;
+
+  display:block;
+
+  width:25px;
+
+  height:1px;
+
+  background:#23160F;
+
+  margin:6px 0;
+
 }
+
+
+
 
 .montecapra-busqueda,
 .montecapra-icono {
-  color:#23160F !important;
-  text-decoration:none !important;
-  font-size:13px !important;
-  letter-spacing:1px !important;
+
+  color:#23160F;
+
+  text-decoration:none;
+
+  font-size:13px;
+
+  letter-spacing:1px;
+
 }
+
+
+
 
 .montecapra-logo {
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
+
+  display:flex;
+
+  justify-content:center;
+
 }
+
+
 
 .montecapra-logo img {
-  max-width:220px !important;
-  height:auto !important;
+
+  max-width:220px;
+
+  height:auto;
+
 }
+
+
+
 
 .montecapra-navegacion {
-  border-top:1px solid rgba(35,22,15,.12) !important;
-  border-bottom:1px solid rgba(35,22,15,.12) !important;
-  display:flex !important;
-  justify-content:center !important;
-  gap:45px !important;
-  padding:22px !important;
+
+  border-top:1px solid rgba(35,22,15,.12);
+
+  border-bottom:1px solid rgba(35,22,15,.12);
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:45px;
+
+  padding:22px;
+
 }
 
+
+
+
 .montecapra-navegacion a {
-  color:#23160F !important;
-  text-decoration:none !important;
-  text-transform:uppercase !important;
-  letter-spacing:2px !important;
-  font-size:12px !important;
+
+  color:#23160F;
+
+  text-decoration:none;
+
+  text-transform:uppercase;
+
+  letter-spacing:2px;
+
+  font-size:12px;
+
 }
+
+
 
 
 @media(max-width:749px){
 
-.montecapra-header-principal {
-padding:25px 20px !important;
+
+.montecapra-announcement {
+  width:calc(100% - 24px);
+  min-height:72px;
+  margin:12px auto 0;
+  padding:10px 14px;
+  grid-template-columns:1fr auto;
+  grid-template-areas:
+    "social country"
+    "promotion promotion";
+  gap:8px 12px;
+  font-size:10px;
 }
+
+
+
+.montecapra-announcement-left {
+  grid-area:social;
+  gap:10px;
+}
+
+.montecapra-announcement-center {
+  grid-area:promotion;
+  flex-wrap:wrap;
+  gap:4px 8px;
+  white-space:normal;
+}
+
+.montecapra-announcement-right {
+  grid-area:country;
+}
+
+
+.montecapra-header-principal {
+
+  padding:25px 20px;
+
+}
+
+
 
 .montecapra-busqueda {
-display:none !important;
+
+  display:none;
+
 }
+
+
 
 .montecapra-logo img {
-max-width:160px !important;
+
+  max-width:160px;
+
 }
+
+
 
 .montecapra-navegacion {
-gap:18px !important;
-overflow:auto !important;
-justify-content:flex-start !important;
-}
+
+  gap:18px;
+
+  overflow:auto;
+
+  justify-content:flex-start;
 
 }
+
+
+
+}
+
+
 
 {% endstylesheet %}
+
+
 
 
 {% schema %}
@@ -169,8 +373,30 @@ justify-content:flex-start !important;
     {
       "type": "text",
       "id": "announcement_text",
-      "label": "Texto barra superior",
-      "default": "Café colombiano de origen"
+      "label": "Texto promoción",
+      "default": "Obtén 10% OFF en tu primera compra"
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Código descuento",
+      "default": "MONTE10"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "rappi_url",
+      "label": "Rappi"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency",
+      "label": "Mostrar moneda",
+      "default": true
     },
     {
       "type": "image_picker",
