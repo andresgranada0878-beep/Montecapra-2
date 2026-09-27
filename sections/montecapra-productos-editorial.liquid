@@ -1,198 +1,451 @@
-{{ 'component-card.css' | asset_url | stylesheet_tag }}
-{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign product_limit = section.settings.product_count | default: 4 | plus: 0
+  assign desktop_columns = section.settings.desktop_columns | default: '4'
+%}
 
-<section class="section montecapra-productos">
-  <div class="page-width montecapra-productos__container">
+{% if section.settings.collection != blank %}
+  <section
+    id="MontecapraProducts-{{ section.id }}"
+    class="montecapra-editorial"
+    {% if section.settings.heading != blank %}aria-labelledby="MontecapraProductsHeading-{{ section.id }}"{% endif %}
+    style="--montecapra-editorial-bg: {{ section.settings.section_background }}; --montecapra-editorial-card-bg: {{ section.settings.card_background }}; --montecapra-editorial-text: {{ section.settings.text_color }}; --montecapra-editorial-button: {{ section.settings.button_color }}; --montecapra-editorial-columns: {{ desktop_columns }}; --montecapra-editorial-radius: {{ section.settings.card_radius }}px;"
+  >
+    <div class="montecapra-editorial__container">
+      {% if section.settings.heading != blank %}
+        <header class="montecapra-editorial__header">
+          <h2 class="montecapra-editorial__heading" id="MontecapraProductsHeading-{{ section.id }}">
+            {{ section.settings.heading | escape }}
+          </h2>
+        </header>
+      {% endif %}
 
-    {% if section.settings.titulo != blank %}
-      <h2 class="montecapra-productos__title">
-        {{ section.settings.titulo }}
-      </h2>
-    {% endif %}
+      <ul class="montecapra-editorial__grid" role="list">
+        {% for product in section.settings.collection.products limit: product_limit %}
+          {% liquid
+            assign featured_image = product.featured_image
+            assign image_alt = featured_image.alt | default: product.title
+            assign badge_label = blank
 
-    {% if section.settings.collection != blank %}
-      <ul class="grid product-grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
+            if section.settings.show_badge
+              if product.available == false
+                assign badge_label = 'Agotado'
+              elsif product.compare_at_price > product.price
+                assign badge_label = 'Oferta'
+              else
+                for product_tag in product.tags
+                  assign normalized_tag = product_tag | downcase | strip
+                  if normalized_tag == 'nuevo' or normalized_tag == 'nuevo lanzamiento'
+                    assign badge_label = product_tag
+                    break
+                  endif
+                endfor
+              endif
+            endif
+          %}
 
-        {% for producto in section.settings.collection.products %}
+          <li class="montecapra-editorial__grid-item">
+            <article class="montecapra-editorial__card">
+              <a class="montecapra-editorial__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+                {% if featured_image != blank %}
+                  {{
+                    featured_image
+                    | image_url: width: 1800
+                    | image_tag:
+                      widths: '360, 540, 720, 900, 1200, 1500, 1800',
+                      sizes: '(min-width: 1400px) 320px, (min-width: 990px) 30vw, (min-width: 750px) 46vw, calc(100vw - 32px)',
+                      loading: 'lazy',
+                      alt: image_alt,
+                      class: 'montecapra-editorial__image'
+                  }}
+                {% endif %}
 
-          <li class="grid__item">
+                {% if badge_label != blank %}
+                  <span class="montecapra-editorial__badge">{{ badge_label | escape }}</span>
+                {% endif %}
+              </a>
 
-            {% render 'card-product',
-              card_product: producto,
-              section_id: section.id,
-              show_secondary_image: true,
-              show_vendor: false,
-              show_rating: false
-            %}
+              <div class="montecapra-editorial__content">
+                <h3 class="montecapra-editorial__product-title">
+                  <a href="{{ product.url }}">{{ product.title | escape }}</a>
+                </h3>
 
-            {% liquid
-              assign region = producto.metafields.custom.region.value
-              assign altitud = producto.metafields.custom.altitud.value
-              assign notas = producto.metafields.custom.notas_cata.value
-              assign proceso = producto.metafields.custom.proceso.value
-            %}
-
-            {% if region != blank or altitud != blank or notas != blank or proceso != blank %}
-
-              <div class="montecapra-productos__facts">
-
-                {% if region != blank %}
-                  <div>
-                    <span>Región</span>
-                    <p>{{ region }}</p>
+                {% if section.settings.show_price %}
+                  <div class="montecapra-editorial__price">
+                    {% if product.compare_at_price > product.price %}
+                      <s class="montecapra-editorial__compare-price">{{ product.compare_at_price | money }}</s>
+                    {% endif %}
+                    <span>{{ product.price | money }}</span>
                   </div>
                 {% endif %}
 
-                {% if altitud != blank %}
-                  <div>
-                    <span>Altitud</span>
-                    <p>{{ altitud }}</p>
-                  </div>
+                {% if section.settings.show_coffee_info %}
+                  {% liquid
+                    assign region = product.metafields.custom.region.value
+                    assign altitude = product.metafields.custom.altitud.value
+                    assign tasting_notes = product.metafields.custom.notas_cata.value
+                    assign process = product.metafields.custom.proceso.value
+                  %}
+                  {% if region != blank or altitude != blank or tasting_notes != blank or process != blank %}
+                    <dl class="montecapra-editorial__facts">
+                      {% if region != blank %}
+                        <div class="montecapra-editorial__fact"><dt>Origen</dt><dd>{{ region | escape }}</dd></div>
+                      {% endif %}
+                      {% if altitude != blank %}
+                        <div class="montecapra-editorial__fact"><dt>Altitud</dt><dd>{{ altitude | escape }}</dd></div>
+                      {% endif %}
+                      {% if tasting_notes != blank %}
+                        <div class="montecapra-editorial__fact"><dt>Notas de cata</dt><dd>{{ tasting_notes | escape }}</dd></div>
+                      {% endif %}
+                      {% if process != blank %}
+                        <div class="montecapra-editorial__fact"><dt>Proceso</dt><dd>{{ process | escape }}</dd></div>
+                      {% endif %}
+                    </dl>
+                  {% endif %}
                 {% endif %}
 
-                {% if notas != blank %}
-                  <div>
-                    <span>Notas de cata</span>
-                    <p>{{ notas }}</p>
-                  </div>
+                {% if section.settings.show_button and section.settings.button_label != blank %}
+                  <a class="montecapra-editorial__button" href="{{ product.url }}">{{ section.settings.button_label | escape }}</a>
                 {% endif %}
-
-                {% if proceso != blank %}
-                  <div>
-                    <span>Proceso</span>
-                    <p>{{ proceso }}</p>
-                  </div>
-                {% endif %}
-
               </div>
-
-            {% endif %}
-
+            </article>
           </li>
-
         {% endfor %}
-
       </ul>
-    {% endif %}
-
-  </div>
-</section>
-
-
-{% stylesheet %}
-
-.montecapra-productos {
-  background: #faf8f3;
-  padding-top: 80px;
-  padding-bottom: 80px;
-}
-
-.montecapra-productos__container {
-  max-width: 1400px;
-}
-
-.montecapra-productos__title {
-  margin-bottom: 40px;
-  color: #23160f;
-}
+    </div>
+  </section>
+{% endif %}
 
 
-.montecapra-productos .product-grid {
-  row-gap: 40px;
-  column-gap: 32px;
-}
-
-
-.montecapra-productos .card {
-  border-radius: 24px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 8px 24px rgba(35,22,15,.08);
-}
-
-
-.montecapra-productos .card__content {
-  padding: 18px;
-}
-
-
-.montecapra-productos__facts {
-
-  margin-top: 18px;
-  padding: 18px;
-
-  background: #fff;
-  border-radius: 0 0 20px 20px;
-
-  display: grid;
-  gap: 14px;
-
-}
-
-
-.montecapra-productos__facts span {
-
-  color:#85734f;
-
-  font-size:10px;
-
-  text-transform:uppercase;
-
-  letter-spacing:.1em;
-
-  font-weight:600;
-
-}
-
-
-.montecapra-productos__facts p {
-
-  margin:4px 0 0;
-
-  color:#49352a;
-
-  font-size:14px;
-
-}
-
-
-@media screen and (max-width:749px){
-
-  .montecapra-productos{
-
-    padding-top:50px;
-
-    padding-bottom:50px;
-
+{% style %}
+  #MontecapraProducts-{{ section.id }} {
+    --montecapra-editorial-bg: {{ section.settings.section_background }};
+    --montecapra-editorial-card-bg: {{ section.settings.card_background }};
+    --montecapra-editorial-text: {{ section.settings.text_color }};
+    --montecapra-editorial-button: {{ section.settings.button_color }};
+    --montecapra-editorial-columns: {{ section.settings.desktop_columns }};
+    --montecapra-editorial-radius: {{ section.settings.card_radius }}px;
+    padding: 80px 24px;
+    background: var(--montecapra-editorial-bg, #f7f4ef);
+    color: var(--montecapra-editorial-text, #23160f);
   }
 
-
-  .montecapra-productos .product-grid{
-
-    column-gap:16px;
-
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__container {
+    max-width: 1500px;
+    margin: 0 auto;
   }
 
-}
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__header {
+    margin-bottom: 42px;
+    text-align: center;
+  }
 
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__heading {
+    margin: 0;
+    color: inherit;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
 
-{% endstylesheet %}
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--montecapra-editorial-columns, 4), minmax(0, 1fr));
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__card {
+    display: flex;
+    min-width: 0;
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--montecapra-editorial-radius, 28px);
+    background: var(--montecapra-editorial-card-bg, #fff);
+    box-shadow: 0 8px 28px rgba(35, 22, 15, 0.06);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: #eee9e1;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms cubic-bezier(0.2, 0.65, 0.3, 1);
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 8px 11px;
+    border-radius: 2px;
+    background: rgba(35, 22, 15, 0.92);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__content {
+    display: flex;
+    height: 100%;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px 22px 24px;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__product-title {
+    margin: 0;
+    color: inherit;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__product-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__price {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    align-items: baseline;
+    margin-top: 10px;
+    color: inherit;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__compare-price {
+    color: #857d73;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__facts {
+    display: grid;
+    width: 100%;
+    gap: 12px;
+    margin: 18px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid rgba(35, 22, 15, 0.12);
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__fact dt {
+    color: #85734f;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__fact dd {
+    margin: 4px 0 0;
+    color: #49352a;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__button {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    padding: 12px 24px;
+    border: 1px solid var(--montecapra-editorial-button, #23160f);
+    border-radius: 2px;
+    background: var(--montecapra-editorial-button, #23160f);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 180ms ease, transform 180ms ease;
+  }
+
+  #MontecapraProducts-{{ section.id }} .montecapra-editorial__button:hover {
+    transform: translateY(-2px);
+    background: #49352a;
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 34px rgba(35, 22, 15, 0.1);
+    }
+
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__card:hover .montecapra-editorial__image {
+      transform: scale(1.035);
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #MontecapraProducts-{{ section.id }} {
+      padding: 52px 16px;
+    }
+
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__header {
+      margin-bottom: 28px;
+    }
+
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__heading {
+      font-size: 26px;
+    }
+
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__content {
+      padding: 18px 18px 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__card,
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__image,
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__button {
+      transition: none;
+    }
+
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__card:hover,
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__card:hover .montecapra-editorial__image,
+    #MontecapraProducts-{{ section.id }} .montecapra-editorial__button:hover {
+      transform: none;
+    }
+  }
+{% endstyle %}
 
 
 {% schema %}
 {
-  "name": "Productos MonteCapra",
+  "name": "Productos Montecapra",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
   "settings": [
     {
-      "type": "text",
-      "id": "titulo",
-      "label": "Título",
-      "default": "Nuestros cafés"
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Título de sección",
+      "default": "Cafés de origen"
     },
     {
       "type": "collection",
       "id": "collection",
       "label": "Colección"
+    },
+    {
+      "type": "select",
+      "id": "product_count",
+      "label": "Productos visibles",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" },
+        { "value": "6", "label": "6" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Columnas de escritorio",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Mostrar precio",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_coffee_info",
+      "label": "Mostrar información del café",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Mostrar botón",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Mostrar etiquetas",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón",
+      "default": "Descubrir café"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Fondo de sección",
+      "default": "#F7F4EF"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Fondo de tarjeta",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#23160F"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color del botón",
+      "default": "#23160F"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Radio de tarjeta",
+      "min": 24,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 28
     }
   ],
   "presets": [
