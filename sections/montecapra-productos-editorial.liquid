@@ -1,183 +1,194 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
-<section class="section">
-  <div class="page-width">
+<section class="section montecapra-productos">
+  <div class="page-width montecapra-productos__container">
+
+    {% if section.settings.titulo != blank %}
+      <h2 class="montecapra-productos__title">
+        {{ section.settings.titulo }}
+      </h2>
+    {% endif %}
+
     {% if section.settings.collection != blank %}
       <ul class="grid product-grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
-        {% for producto in section.settings.collection.products %}
-          <li class="grid__item">
-            {% render 'card-product', card_product: producto, section_id: section.id %}
 
-            {% liquid
-              assign origin_region = producto.metafields.custom.region.value
-              assign origin_altitude = producto.metafields.custom.altitud.value
-              assign origin_tasting_notes = producto.metafields.custom.notas_cata.value
-              assign origin_process = producto.metafields.custom.proceso.value
+        {% for producto in section.settings.collection.products %}
+
+          <li class="grid__item">
+
+            {% render 'card-product',
+              card_product: producto,
+              section_id: section.id,
+              show_secondary_image: true,
+              show_vendor: false,
+              show_rating: false
             %}
 
-            {% if origin_region != blank or origin_altitude != blank or origin_tasting_notes != blank or origin_process != blank %}
-              <dl class="montecapra-productos__coffee-facts">
-                {% if origin_region != blank %}
-                  <div class="montecapra-productos__coffee-fact">
-                    <dt>Región</dt>
-                    <dd>{{ origin_region | escape }}</dd>
+            {% liquid
+              assign region = producto.metafields.custom.region.value
+              assign altitud = producto.metafields.custom.altitud.value
+              assign notas = producto.metafields.custom.notas_cata.value
+              assign proceso = producto.metafields.custom.proceso.value
+            %}
+
+            {% if region != blank or altitud != blank or notas != blank or proceso != blank %}
+
+              <div class="montecapra-productos__facts">
+
+                {% if region != blank %}
+                  <div>
+                    <span>Región</span>
+                    <p>{{ region }}</p>
                   </div>
                 {% endif %}
-                {% if origin_altitude != blank %}
-                  <div class="montecapra-productos__coffee-fact">
-                    <dt>Altitud</dt>
-                    <dd>{{ origin_altitude | escape }}</dd>
+
+                {% if altitud != blank %}
+                  <div>
+                    <span>Altitud</span>
+                    <p>{{ altitud }}</p>
                   </div>
                 {% endif %}
-                {% if origin_tasting_notes != blank %}
-                  <div class="montecapra-productos__coffee-fact">
-                    <dt>Notas de cata</dt>
-                    <dd>{{ origin_tasting_notes | escape }}</dd>
+
+                {% if notas != blank %}
+                  <div>
+                    <span>Notas de cata</span>
+                    <p>{{ notas }}</p>
                   </div>
                 {% endif %}
-                {% if origin_process != blank %}
-                  <div class="montecapra-productos__coffee-fact">
-                    <dt>Proceso</dt>
-                    <dd>{{ origin_process | escape }}</dd>
+
+                {% if proceso != blank %}
+                  <div>
+                    <span>Proceso</span>
+                    <p>{{ proceso }}</p>
                   </div>
                 {% endif %}
-              </dl>
+
+              </div>
+
             {% endif %}
+
           </li>
+
         {% endfor %}
+
       </ul>
     {% endif %}
+
   </div>
 </section>
 
-{% style %}
-  #shopify-section-{{ section.id }} .section {
-    padding-top: 96px;
-    padding-bottom: 96px;
-    background: #faf8f3;
+
+{% stylesheet %}
+
+.montecapra-productos {
+  background: #faf8f3;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.montecapra-productos__container {
+  max-width: 1400px;
+}
+
+.montecapra-productos__title {
+  margin-bottom: 40px;
+  color: #23160f;
+}
+
+
+.montecapra-productos .product-grid {
+  row-gap: 40px;
+  column-gap: 32px;
+}
+
+
+.montecapra-productos .card {
+  border-radius: 24px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 8px 24px rgba(35,22,15,.08);
+}
+
+
+.montecapra-productos .card__content {
+  padding: 18px;
+}
+
+
+.montecapra-productos__facts {
+
+  margin-top: 18px;
+  padding: 18px;
+
+  background: #fff;
+  border-radius: 0 0 20px 20px;
+
+  display: grid;
+  gap: 14px;
+
+}
+
+
+.montecapra-productos__facts span {
+
+  color:#85734f;
+
+  font-size:10px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.1em;
+
+  font-weight:600;
+
+}
+
+
+.montecapra-productos__facts p {
+
+  margin:4px 0 0;
+
+  color:#49352a;
+
+  font-size:14px;
+
+}
+
+
+@media screen and (max-width:749px){
+
+  .montecapra-productos{
+
+    padding-top:50px;
+
+    padding-bottom:50px;
+
   }
 
-  #shopify-section-{{ section.id }} .product-grid {
-    column-gap: 36px;
-    row-gap: 48px;
+
+  .montecapra-productos .product-grid{
+
+    column-gap:16px;
+
   }
 
-  #shopify-section-{{ section.id }} .card {
-    border-radius: 24px;
-    background: #fff;
-    box-shadow: 0 4px 20px rgba(35, 22, 15, 0.05);
-    transition: transform 220ms ease, box-shadow 220ms ease;
-  }
+}
 
-  #shopify-section-{{ section.id }} .card__content {
-    padding: 0 22px 26px;
-  }
 
-  #shopify-section-{{ section.id }} .card__information {
-    padding-top: 22px;
-  }
+{% endstylesheet %}
 
-  #shopify-section-{{ section.id }} .card__heading a {
-    color: #23160f;
-    font-size: 19px;
-    font-weight: 500;
-    line-height: 1.35;
-  }
-
-  #shopify-section-{{ section.id }} .price {
-    margin-top: 12px;
-  }
-
-  #shopify-section-{{ section.id }} .price-item {
-    color: #49352a;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  #shopify-section-{{ section.id }} .montecapra-productos__coffee-facts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px 20px;
-    margin: 24px 0 0;
-    padding: 22px;
-    border-top: 1px solid rgba(35, 22, 15, 0.16);
-    border-radius: 0 0 18px 18px;
-    background: rgba(255, 255, 255, 0.82);
-  }
-
-  #shopify-section-{{ section.id }} .montecapra-productos__coffee-fact {
-    min-width: 0;
-    display: grid;
-    gap: 7px;
-  }
-
-  #shopify-section-{{ section.id }} .montecapra-productos__coffee-fact dt {
-    color: #85734f;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  #shopify-section-{{ section.id }} .montecapra-productos__coffee-fact dd {
-    margin: 0;
-    color: #49352a;
-    font-size: 14px;
-    line-height: 1.55;
-    overflow-wrap: anywhere;
-  }
-
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    #shopify-section-{{ section.id }} .card-wrapper:hover .card {
-      transform: translateY(-2px);
-      box-shadow: 0 9px 26px rgba(35, 22, 15, 0.075);
-    }
-  }
-
-  @media screen and (max-width: 749px) {
-    #shopify-section-{{ section.id }} .section {
-      padding-top: 60px;
-      padding-bottom: 60px;
-    }
-
-    #shopify-section-{{ section.id }} .product-grid {
-      column-gap: 18px;
-      row-gap: 30px;
-    }
-
-    #shopify-section-{{ section.id }} .card__content {
-      padding: 0 16px 20px;
-    }
-
-    #shopify-section-{{ section.id }} .card__information {
-      padding-top: 16px;
-    }
-
-    #shopify-section-{{ section.id }} .montecapra-productos__coffee-facts {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 16px;
-      margin-top: 20px;
-      padding: 18px 16px;
-    }
-
-    #shopify-section-{{ section.id }} .montecapra-productos__coffee-fact dd {
-      font-size: 13px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #shopify-section-{{ section.id }} .card {
-      transition: none;
-      transform: none;
-    }
-  }
-{% endstyle %}
 
 {% schema %}
 {
   "name": "Productos MonteCapra",
   "settings": [
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título",
+      "default": "Nuestros cafés"
+    },
     {
       "type": "collection",
       "id": "collection",
