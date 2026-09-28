@@ -1,1 +1,36 @@
-{"name":"t:sections.footer.name","type":"footer","sections":{"footer":{"type":"footer","settings":{"color_scheme":"scheme-1","newsletter_enable":true,"newsletter_heading":"Subscribe to our emails","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":true,"enable_language_selector":true,"payment_enable":true,"show_policy":true,"margin_top":0,"padding_top":36,"padding_bottom":36}}},"order":["footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "image": "shopify://shop_images/montecapra-c-psulas-sin-texto.png",
+        "image_alt": "Café MonteCapra",
+        "eyebrow": "NEWSLETTER",
+        "heading": "Café, historias y novedades <em>directo a tu correo</em>",
+        "text": "Suscríbete y sé el primero en conocer lanzamientos, experiencias, contenidos exclusivos y más sobre el mundo del café MonteCapra.",
+        "placeholder_text": "Tu correo electrónico",
+        "button_text": "Suscribirme",
+        "background_color": "#784F02",
+        "text_color": "#ffffff",
+        "accent_color": "#c4915c",
+        "button_color": "#a87845",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

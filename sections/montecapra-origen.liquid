@@ -1,0 +1,1043 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #MontecapraOrigin-{{ section.id }} {
+    background-color: {{ section.settings.background_color | default: '#F7F4EF' }} !important;
+    color: {{ section.settings.text_color | default: '#1E2D22' }};
+    padding-top: {{ section.settings.mobile_padding_top | default: 40 }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom | default: 40 }}px;
+    overflow: hidden;
+    width: 100%;
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} {
+      padding-top: {{ section.settings.section_padding_top | default: 80 }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom | default: 80 }}px;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__container {
+    max-width: {{ section.settings.max_width | default: 1300 }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* BLOQUE A — HERO DE ORIGEN */
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero {
+      grid-template-columns: {% if section.settings.hero_image_side == 'left' %}55% 45%{% else %}45% 55%{% endif %};
+      gap: 60px;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero-image-col {
+    order: {% if section.settings.hero_image_side == 'left' %}1{% else %}2{% endif %};
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero-content-col {
+    order: {% if section.settings.hero_image_side == 'left' %}2{% else %}1{% endif %};
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero-image-wrapper {
+    width: 100%;
+    height: {{ section.settings.hero_image_height_mobile | default: 320 }}px;
+    border-radius: {{ section.settings.hero_radius | default: 24 }}px;
+    overflow: hidden;
+    position: relative;
+    background: #E5DED4;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero-image-wrapper {
+      height: {{ section.settings.hero_image_height_desktop | default: 520 }}px;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: {{ section.settings.hero_image_fit | default: 'cover' }};
+    object-position: {{ section.settings.hero_image_position | default: 'center' }};
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__eyebrow {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    color: {{ section.settings.accent_color | default: '#A87845' }};
+    margin-bottom: 16px;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero-title {
+    font-family: inherit;
+    font-size: clamp(38px, 4.5vw, 68px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: {{ section.settings.text_color | default: '#1E2D22' }};
+    margin: 0 0 20px 0;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__hero-text {
+    font-size: 17px;
+    line-height: 1.6;
+    color: {{ section.settings.secondary_text_color | default: '#6F6A63' }};
+    margin: 0 0 28px 0;
+  }
+
+  /* BOTONES DE NAVEGACIÓN HISTORIA / ORIGEN */
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__nav-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(35, 22, 15, 0.18);
+    background: transparent;
+    color: {{ section.settings.text_color | default: '#1E2D22' }};
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__nav-btn:hover,
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__nav-btn--active {
+    background: {{ section.settings.dark_color | default: '#173C2A' }};
+    border-color: {{ section.settings.dark_color | default: '#173C2A' }};
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(35, 22, 15, 0.12);
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__nav-btn span {
+    transition: transform 0.25s ease;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__nav-btn:hover span,
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__nav-btn--active span {
+    transform: translateX(3px);
+  }
+
+  /* BOTONES EDITORIALES */
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: {{ section.settings.button_color | default: '#173C2A' }};
+    color: {{ section.settings.button_text_color | default: '#FFFFFF' }};
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: transparent;
+    color: {{ section.settings.dark_color | default: '#173C2A' }};
+    padding: 13px 26px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid {{ section.settings.dark_color | default: '#173C2A' }};
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, color 0.3s ease;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__btn-outline:hover {
+    transform: translateY(-2px);
+    background-color: {{ section.settings.dark_color | default: '#173C2A' }};
+    color: #FFFFFF;
+  }
+
+  /* ESPACIADO ENTRE BLOQUES */
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__spacer-hero-process {
+    height: {{ section.settings.gap_hero_process | default: 80 }}px;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__spacer-process-closing {
+    height: {{ section.settings.gap_process_closing | default: 80 }}px;
+  }
+
+  /* BLOQUE B — PROCESO */
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__process-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 48px auto;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__process-title {
+    font-family: inherit;
+    font-size: clamp(32px, 3.5vw, 48px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: {{ section.settings.text_color | default: '#1E2D22' }};
+    margin: 0;
+  }
+
+  /* DESKTOP & TABLET PROCESS GRID */
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__process-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__process-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-card {
+    background-color: {{ section.settings.light_background | default: '#F5F0E8' }};
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    flex: 0 0 82vw;
+    scroll-snap-align: start;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-card {
+      flex: none;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__process-grid {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 16px;
+      padding-bottom: 16px;
+      margin: 0 -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      scrollbar-width: none;
+    }
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__process-grid::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: {{ section.settings.accent_color | default: '#A87845' }};
+    margin-bottom: 8px;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: {{ section.settings.text_color | default: '#1E2D22' }};
+    margin: 0 0 12px 0;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-line {
+    width: 32px;
+    height: 2px;
+    background-color: {{ section.settings.accent_color | default: '#A87845' }};
+    margin-bottom: 16px;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-image-wrap {
+    width: 100%;
+    aspect-ratio: 4/5;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    background: #E5DED4;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-image-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__step-desc {
+    font-size: 15px;
+    line-height: 1.5;
+    color: {{ section.settings.secondary_text_color | default: '#6F6A63' }};
+    margin: 0;
+  }
+
+  /* BLOQUE C — CIERRE EDITORIAL EQUILIBRADO Y ADAPTABLE */
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 28px;
+    overflow: hidden;
+    max-width: 1050px;
+    margin: 0 auto;
+    box-shadow: 0 12px 35px rgba(35, 22, 15, 0.08);
+  }
+
+  @media screen and (min-width: 990px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing {
+      grid-template-columns: 46% 54%;
+      align-items: stretch; /* Estira ambos lados para que tengan la misma altura exactamente */
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-image-col {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    background: #E5DED4;
+  }
+
+  @media screen and (min-width: 990px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-image-col {
+      height: 100%;
+      min-height: unset;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-image-col img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: {{ section.settings.closing_image_fit | default: 'cover' }};
+    object-position: {{ section.settings.closing_image_position | default: 'center' }};
+  }
+
+  @media screen and (min-width: 990px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-image-col img {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-content-col {
+    background-color: {{ section.settings.dark_color | default: '#173C2A' }};
+    color: #FFFFFF;
+    padding: 35px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-content-col {
+      padding: 45px 45px;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    color: {{ section.settings.accent_color | default: '#A87845' }};
+    margin-bottom: 12px;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-title {
+    font-family: inherit;
+    font-size: clamp(28px, 3.2vw, 42px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    margin: 0 0 16px 0;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-text {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 24px 0;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-actions {
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-actions .montecapra-origin__btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-actions .montecapra-origin__btn {
+      width: auto;
+    }
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-actions .montecapra-origin__btn-outline {
+    width: 100%;
+    justify-content: center;
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #FFFFFF;
+  }
+
+  #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-actions .montecapra-origin__btn-outline:hover {
+    background-color: #FFFFFF;
+    color: {{ section.settings.dark_color | default: '#173C2A' }};
+    border-color: #FFFFFF;
+  }
+
+  @media screen and (min-width: 750px) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__closing-actions .montecapra-origin__btn-outline {
+      width: auto;
+    }
+  }
+
+  /* ANIMACIONES INTERSECTION OBSERVER */
+  @media (prefers-reduced-motion: no-preference) {
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__animate {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #MontecapraOrigin-{{ section.id }} .montecapra-origin__animate.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+{%- endstyle -%}
+
+<section id="MontecapraOrigin-{{ section.id }}" class="montecapra-origin" data-section-id="{{ section.id }}">
+  <div class="montecapra-origin__container">
+
+    <!-- BLOQUE A — HERO DE ORIGEN -->
+    <div class="montecapra-origin__hero">
+      <div class="montecapra-origin__hero-image-col montecapra-origin__animate">
+        <div class="montecapra-origin__hero-image-wrapper">
+          {%- if section.settings.hero_image != blank -%}
+            <img src="{{ section.settings.hero_image | image_url: width: 1400 }}" alt="{{ section.settings.hero_image_alt | escape }}" loading="lazy" width="{{ section.settings.hero_image.width }}" height="{{ section.settings.hero_image.height }}">
+          {%- else -%}
+            <img src="https://cdn.shopify.com/s/files/1/0658/5832/2592/files/hero-origen-montecapra.jpg" alt="Caficultor en origen cosechando café colombiano" loading="lazy" width="1400" height="900">
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="montecapra-origin__hero-content-col montecapra-origin__animate">
+        {%- if section.settings.hero_eyebrow != blank -%}
+          <div class="montecapra-origin__eyebrow">{{ section.settings.hero_eyebrow }}</div>
+        {%- endif -%}
+        {%- if section.settings.hero_heading != blank -%}
+          <h2 class="montecapra-origin__hero-title">{{ section.settings.hero_heading }}</h2>
+        {%- endif -%}
+
+        <!-- BOTONES DE NAVEGACIÓN: HISTORIA Y ORIGEN -->
+        <div class="montecapra-origin__nav-actions">
+          <a href="/pages/historia" class="montecapra-origin__nav-btn">
+            Historia <span>→</span>
+          </a>
+          <a href="/pages/origen" class="montecapra-origin__nav-btn montecapra-origin__nav-btn--active">
+            Origen <span>→</span>
+          </a>
+        </div>
+
+        {%- if section.settings.hero_description != blank -%}
+          <div class="montecapra-origin__hero-text">{{ section.settings.hero_description }}</div>
+        {%- endif -%}
+        {%- if section.settings.story_button_label != blank and section.settings.story_button_link != blank -%}
+          <a href="{{ section.settings.story_button_link }}" class="montecapra-origin__btn">
+            {{ section.settings.story_button_label }} <span>→</span>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- ESPACIADOR -->
+    <div class="montecapra-origin__spacer-hero-process"></div>
+
+    <!-- BLOQUE B — PROCESO -->
+    <div class="montecapra-origin__process-header montecapra-origin__animate">
+      {%- if section.settings.process_eyebrow != blank -%}
+        <div class="montecapra-origin__eyebrow">{{ section.settings.process_eyebrow }}</div>
+      {%- endif -%}
+      {%- if section.settings.process_heading != blank -%}
+        <h3 class="montecapra-origin__process-title">{{ section.settings.process_heading }}</h3>
+      {%- endif -%}
+    </div>
+
+    <div class="montecapra-origin__process-grid montecapra-origin__animate">
+      {%- assign default_step_images = 'https://cdn.shopify.com/s/files/1/0658/5832/2592/files/step-1.jpg,https://cdn.shopify.com/s/files/1/0658/5832/2592/files/step-2.jpg,https://cdn.shopify.com/s/files/1/0658/5832/2592/files/step-3.jpg,https://cdn.shopify.com/s/files/1/0658/5832/2592/files/step-4.jpg' | split: ',' -%}
+      {%- assign step_index = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'step' -%}
+            <div class="montecapra-origin__step-card" {{ block.shopify_attributes }}>
+              <div>
+                <div class="montecapra-origin__step-number">{{ block.settings.number }}</div>
+                <h4 class="montecapra-origin__step-title">{{ block.settings.title }}</h4>
+                <div class="montecapra-origin__step-line"></div>
+                <div class="montecapra-origin__step-image-wrap">
+                  {%- if block.settings.image != blank -%}
+                    <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.image_alt | escape }}" loading="lazy" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}">
+                  {%- else -%}
+                    <img src="{{ default_step_images[step_index] }}" alt="{{ block.settings.image_alt | escape }}" loading="lazy" width="600" height="750">
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- if block.settings.description != blank -%}
+                <p class="montecapra-origin__step-desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+            </div>
+            {%- assign step_index = step_index | plus: 1 -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <!-- ESPACIADOR -->
+    <div class="montecapra-origin__spacer-process-closing"></div>
+
+    <!-- BLOQUE C — CIERRE EDITORIAL -->
+    <div class="montecapra-origin__closing montecapra-origin__animate">
+      <div class="montecapra-origin__closing-image-col">
+        {%- if section.settings.closing_image != blank -%}
+          <img src="{{ section.settings.closing_image | image_url: width: 1200 }}" alt="{{ section.settings.closing_image_alt | escape }}" loading="lazy" width="{{ section.settings.closing_image.width }}" height="{{ section.settings.closing_image.height }}">
+        {%- else -%}
+          <img src="https://cdn.shopify.com/s/files/1/0658/5832/2592/files/closing-origen-montecapra.jpg" alt="Manos sosteniendo cerezas de café colombiano" loading="lazy" width="1200" height="900">
+        {%- endif -%}
+      </div>
+      <div class="montecapra-origin__closing-content-col">
+        {%- if section.settings.closing_eyebrow != blank -%}
+          <div class="montecapra-origin__closing-eyebrow">{{ section.settings.closing_eyebrow }}</div>
+        {%- endif -%}
+        {%- if section.settings.closing_heading != blank -%}
+          <h3 class="montecapra-origin__closing-title">{{ section.settings.closing_heading | newline_to_br }}</h3>
+        {%- endif -%}
+        {%- if section.settings.closing_text != blank -%}
+          <div class="montecapra-origin__closing-text">{{ section.settings.closing_text }}</div>
+        {%- endif -%}
+
+        <div class="montecapra-origin__closing-actions">
+          {%- if section.settings.story_button_label != blank and section.settings.story_button_link != blank -%}
+            <a href="{{ section.settings.story_button_link }}" class="montecapra-origin__btn" style="background-color: #FFFFFF; color: {{ section.settings.dark_color | default: '#173C2A' }};">
+              {{ section.settings.story_button_label }} <span>→</span>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.impact_button_label != blank and section.settings.impact_button_link != blank -%}
+            <a href="{{ section.settings.impact_button_link }}" class="montecapra-origin__btn-outline">
+              {{ section.settings.impact_button_label }} <span>→</span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sectionEl = document.getElementById("MontecapraOrigin-{{ section.id }}");
+    if (!sectionEl) return;
+
+    const animElements = sectionEl.querySelectorAll(".montecapra-origin__animate");
+    
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries, observerInstance) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observerInstance.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15
+      });
+
+      animElements.forEach(el => observer.observe(el));
+    } else {
+      animElements.forEach(el => el.classList.add("is-visible"));
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Origen MonteCapra",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Grupo Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow Hero",
+      "default": "DE COLOMBIA A TU TAZA"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "hero_heading",
+      "label": "Título Hero",
+      "default": "Todo comienza en el origen"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_description",
+      "label": "Texto Hero",
+      "default": "<p>Creemos que una gran taza de café comienza mucho antes de llegar a tus manos.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Imagen Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_image_alt",
+      "label": "Texto alternativo imagen Hero",
+      "default": "Caficultor en origen cosechando café colombiano"
+    },
+    {
+      "type": "range",
+      "id": "hero_image_height_desktop",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Altura imagen desktop",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "hero_image_height_mobile",
+      "min": 200,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Altura imagen móvil",
+      "default": 320
+    },
+    {
+      "type": "select",
+      "id": "hero_image_fit",
+      "label": "Ajuste de imagen Hero",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "hero_image_position",
+      "label": "Posición de imagen Hero",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" },
+        { "value": "center top", "label": "Center Top" },
+        { "value": "center bottom", "label": "Center Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "hero_image_side",
+      "label": "Posición de imagen en desktop",
+      "options": [
+        { "value": "left", "label": "Izquierda" },
+        { "value": "right", "label": "Derecha" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "hero_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Radio de bordes imagen Hero",
+      "default": 24
+    },
+    {
+      "type": "text",
+      "id": "story_button_label",
+      "label": "Texto botón historia",
+      "default": "Conoce más"
+    },
+    {
+      "type": "url",
+      "id": "story_button_link",
+      "label": "Enlace página historia"
+    },
+    {
+      "type": "header",
+      "content": "Grupo Proceso"
+    },
+    {
+      "type": "text",
+      "id": "process_eyebrow",
+      "label": "Eyebrow Proceso",
+      "default": "UN PROCESO QUE HONRA EL CAFÉ"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "process_heading",
+      "label": "Título Proceso",
+      "default": "Del origen a una experiencia única"
+    },
+    {
+      "type": "header",
+      "content": "Grupo Cierre"
+    },
+    {
+      "type": "image_picker",
+      "id": "closing_image",
+      "label": "Imagen Cierre"
+    },
+    {
+      "type": "text",
+      "id": "closing_image_alt",
+      "label": "Texto alternativo imagen Cierre",
+      "default": "Manos sosteniendo cerezas de café colombiano"
+    },
+    {
+      "type": "range",
+      "id": "closing_image_height_desktop",
+      "min": 350,
+      "max": 800,
+      "step": 25,
+      "unit": "px",
+      "label": "Altura imagen cierre desktop",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "closing_image_height_mobile",
+      "min": 250,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Altura imagen cierre móvil",
+      "default": 380
+    },
+    {
+      "type": "select",
+      "id": "closing_image_fit",
+      "label": "Ajuste de imagen Cierre",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "closing_image_position",
+      "label": "Posición de imagen Cierre",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" },
+        { "value": "center top", "label": "Center Top" },
+        { "value": "center bottom", "label": "Center Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "text",
+      "id": "closing_eyebrow",
+      "label": "Eyebrow Cierre",
+      "default": "DEL ORIGEN CONSERVAMOS LO ESENCIAL"
+    },
+    {
+      "type": "textarea",
+      "id": "closing_heading",
+      "label": "Título Cierre",
+      "default": "El aroma.\nEl carácter.\nLa historia."
+    },
+    {
+      "type": "richtext",
+      "id": "closing_text",
+      "label": "Texto Cierre",
+      "default": "<p>Cada cápsula de MonteCapra es el resultado de un trabajo que respeta la tierra, valora a las personas que la cultivan y lleva la riqueza del café colombiano a una experiencia única en tu taza.</p>"
+    },
+    {
+      "type": "text",
+      "id": "impact_button_label",
+      "label": "Texto botón impacto",
+      "default": "Nuestro impacto"
+    },
+    {
+      "type": "url",
+      "id": "impact_button_link",
+      "label": "Enlace página impacto"
+    },
+    {
+      "type": "header",
+      "content": "Grupo Diseño y Espaciado"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fondo general",
+      "default": "#F7F4EF"
+    },
+    {
+      "type": "color",
+      "id": "dark_color",
+      "label": "Verde oscuro",
+      "default": "#173C2A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Texto principal",
+      "default": "#1E2D22"
+    },
+    {
+      "type": "color",
+      "id": "secondary_text_color",
+      "label": "Texto secundario",
+      "default": "#6F6A63"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color acento / café",
+      "default": "#A87845"
+    },
+    {
+      "type": "color",
+      "id": "light_background",
+      "label": "Fondo claro (pasos)",
+      "default": "#F5F0E8"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color botón",
+      "default": "#173C2A"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Texto botón",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Max width del contenido",
+      "default": 1300
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 20,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding superior desktop",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 20,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding inferior desktop",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding superior móvil",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding inferior móvil",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "gap_hero_process",
+      "min": 20,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "Gap entre hero y proceso",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "gap_process_closing",
+      "min": 20,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "label": "Gap entre proceso y cierre",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Paso",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Número",
+          "default": "01."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Origen"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descripción",
+          "default": "Cafés colombianos seleccionados desde regiones con condiciones únicas de clima y suelo."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Texto alternativo imagen",
+          "default": "Cereza de café en planta"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Origen MonteCapra",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "number": "01.",
+            "title": "Origen",
+            "description": "Cafés colombianos seleccionados desde regiones con condiciones únicas de clima y suelo."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "02.",
+            "title": "Selección",
+            "description": "Elegimos granos con perfiles de sabor excepcionales que representan lo mejor de nuestro país."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "03.",
+            "title": "Transformación",
+            "description": "Tostamos y encapsulamos con tecnología de última generación para conservar todo el aroma, frescura y carácter del café."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "number": "04.",
+            "title": "Tu taza",
+            "description": "El resultado es una experiencia de café premium, lista para disfrutar en cualquier momento."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,659 +1,705 @@
-{% liquid
-  assign step_blocks = section.blocks | where: 'type', 'step'
-  assign plan_blocks = section.blocks | where: 'type', 'plan'
-%}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
-<section
-  id="MontecapraSubscriptions-{{ section.id }}"
-  class="montecapra-configurator"
-  {% if section.settings.heading != blank %}aria-labelledby="MontecapraSubscriptionsHeading-{{ section.id }}"{% endif %}
->
-  <div class="montecapra-configurator__container">
-    {% if section.settings.heading != blank or section.settings.subheading != blank %}
-      <header class="montecapra-configurator__header">
-        {% if section.settings.heading != blank %}
-          <h2 class="montecapra-configurator__heading" id="MontecapraSubscriptionsHeading-{{ section.id }}">
-            {{ section.settings.heading | escape }}
-          </h2>
-        {% endif %}
-        {% if section.settings.subheading != blank %}
-          <p class="montecapra-configurator__subheading">{{ section.settings.subheading | escape }}</p>
-        {% endif %}
-      </header>
-    {% endif %}
-
-    <div class="montecapra-configurator__layout">
-      <div
-        class="montecapra-configurator__media"
-        {% if section.settings.lifestyle_image != blank %}
-          style="--montecapra-configurator-media-ratio: {{ section.settings.lifestyle_image.aspect_ratio | default: 0.8 }};"
-        {% endif %}
-      >
-        {% if section.settings.lifestyle_image != blank %}
-          {{
-            section.settings.lifestyle_image
-            | image_url: width: 1400
-            | image_tag:
-              widths: '480, 720, 960, 1200, 1400',
-              sizes: '(min-width: 990px) 44vw, 100vw',
-              loading: 'lazy',
-              alt: section.settings.lifestyle_image_alt | default: section.settings.heading,
-              class: 'montecapra-configurator__image'
-          }}
-        {% endif %}
-      </div>
-
-      <div class="montecapra-configurator__panel">
-        {% if step_blocks.size > 0 %}
-          <ol class="montecapra-configurator__steps">
-            {% for block in step_blocks %}
-              <li class="montecapra-configurator__step" {{ block.shopify_attributes }}>
-                <span class="montecapra-configurator__step-number">{{ forloop.index }}</span>
-                <div>
-                  {% if block.settings.step_title != blank %}
-                    <p class="montecapra-configurator__step-title">{{ block.settings.step_title | escape }}</p>
-                  {% endif %}
-                  {% if block.settings.step_description != blank %}
-                    <p class="montecapra-configurator__step-description">{{ block.settings.step_description | escape }}</p>
-                  {% endif %}
-                </div>
-              </li>
-            {% endfor %}
-          </ol>
-        {% endif %}
-
-        {% if plan_blocks.size > 0 %}
-          <div class="montecapra-configurator__interactive">
-            {% for block in plan_blocks %}
-              <input
-                type="radio"
-                name="montecapra-plan-{{ section.id }}"
-                id="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"
-                class="montecapra-configurator__radio"
-                {% if forloop.first %}checked{% endif %}
-              >
-            {% endfor %}
-
-            <div class="montecapra-configurator__options" role="list">
-              {% for block in plan_blocks %}
-                <label
-                  for="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"
-                  class="montecapra-configurator__option"
-                  {{ block.shopify_attributes }}
-                >
-                  {% if block.settings.featured and block.settings.featured_label != blank %}
-                    <span class="montecapra-configurator__option-badge">{{ block.settings.featured_label | escape }}</span>
-                  {% endif %}
-                  <span class="montecapra-configurator__option-name">{{ block.settings.plan_name | escape }}</span>
-                  {% if block.settings.capsule_count != blank %}
-                    <span class="montecapra-configurator__option-meta">{{ block.settings.capsule_count | escape }}</span>
-                  {% endif %}
-                  {% if block.settings.price != blank %}
-                    <span class="montecapra-configurator__option-price">{{ block.settings.price | escape }}</span>
-                  {% endif %}
-                </label>
-              {% endfor %}
-            </div>
-
-            <div class="montecapra-configurator__summaries">
-              {% for block in plan_blocks %}
-                <div class="montecapra-configurator__summary" data-plan-index="{{ forloop.index }}">
-                  {% if block.settings.image != blank %}
-                    {{
-                      block.settings.image
-                      | image_url: width: 480
-                      | image_tag:
-                        widths: '240, 360, 480',
-                        sizes: '160px',
-                        loading: 'lazy',
-                        alt: block.settings.plan_name,
-                        class: 'montecapra-configurator__summary-image'
-                    }}
-                  {% endif %}
-
-                  {% if block.settings.plan_description != blank %}
-                    <p class="montecapra-configurator__summary-description">{{ block.settings.plan_description | escape }}</p>
-                  {% endif %}
-
-                  {% if block.settings.frequency != blank %}
-                    <p class="montecapra-configurator__summary-frequency">
-                      {% case block.settings.frequency %}
-                        {% when 'weekly' %}Entrega semanal
-                        {% when 'biweekly' %}Entrega quincenal
-                        {% when 'monthly' %}Entrega mensual
-                      {% endcase %}
-                    </p>
-                  {% endif %}
-
-                  {% if block.settings.price != blank %}
-                    <p class="montecapra-configurator__summary-price">{{ block.settings.price | escape }}</p>
-                  {% endif %}
-
-                  {% if block.settings.highlight != blank %}
-                    <p class="montecapra-configurator__summary-highlight">{{ block.settings.highlight | escape }}</p>
-                  {% endif %}
-
-                  {% if block.settings.button_label != blank %}
-                    <a
-                      href="{{ block.settings.button_link | default: '#' }}"
-                      class="montecapra-configurator__summary-button"
-                    >
-                      {{ block.settings.button_label | escape }}
-                    </a>
-                  {% endif %}
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</section>
-
-{% style %}
-  #MontecapraSubscriptions-{{ section.id }} {
-    --montecapra-configurator-bg: {{ section.settings.section_background }};
-    --montecapra-configurator-panel-bg: {{ section.settings.card_background }};
-    --montecapra-configurator-text: {{ section.settings.text_color }};
-    --montecapra-configurator-accent: {{ section.settings.accent_color }};
-    --montecapra-configurator-button: {{ section.settings.button_color }};
-    --montecapra-configurator-radius: {{ section.settings.card_radius }}px;
-    padding: 80px 24px;
-    background: var(--montecapra-configurator-bg, #f7f4ef);
-    color: var(--montecapra-configurator-text, #23160f);
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
 
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__container {
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .sub-builder-container {
     max-width: 1200px;
     margin: 0 auto;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__header {
-    max-width: 640px;
-    margin: 0 auto 48px;
-    text-align: center;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__heading {
-    margin: 0;
-    color: inherit;
-    font-size: 34px;
-    font-weight: 400;
-    line-height: 1.2;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__subheading {
-    margin: 14px 0 0;
-    color: inherit;
-    opacity: 0.75;
-    font-size: 16px;
-    line-height: 1.5;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 48px;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     align-items: start;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__media {
-    position: relative;
-    top: 0;
-    overflow: hidden;
-    border-radius: calc(var(--montecapra-configurator-radius, 20px) + 6px);
-    aspect-ratio: var(--montecapra-configurator-media-ratio, 0.8);
-    max-height: 82vh;
-    min-height: 320px;
-    background: #eee9e1;
-    box-shadow: 0 20px 48px rgba(35, 22, 15, 0.14);
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
   }
 
   @media screen and (min-width: 990px) {
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__media {
-      position: sticky;
-      top: 32px;
+    .sub-builder-container {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 4rem;
     }
   }
 
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__image {
-    position: absolute;
-    inset: 0;
+  /* Imagen visible tanto en móvil (arriba) como en desktop */
+  .sub-image-preview {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    margin-bottom: 0.5rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .sub-image-preview {
+      position: sticky;
+      top: 4rem;
+      margin-bottom: 0;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border-radius: 24px;
+    }
+  }
+
+  .sub-image-preview img {
+    width: 100%;
+    height: auto;
     display: block;
+    object-fit: cover;
+    max-height: 350px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .sub-image-preview img {
+      max-height: none;
+    }
+  }
+
+  .sub-panel {
+    background: #FFFFFF;
+    padding: 2rem;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  }
+
+  @media screen and (min-width: 750px) {
+    .sub-panel {
+      padding: 3rem;
+    }
+  }
+
+  .sub-title {
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .sub-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.75;
+    margin-bottom: 2rem;
+  }
+
+  .step-label {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Selector de Planes */
+  .plans-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .plan-card {
+    flex: 1 1 calc(50% - 0.4rem);
+    min-width: 110px;
+    border: 2px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 1.2rem 0.6rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background: #FAFAFA;
+    position: relative;
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  @media screen and (min-width: 750px) {
+    .plan-card {
+      flex: 1 1 calc(25% - 0.8rem);
+    }
+  }
+
+  .plan-card:hover {
+    border-color: rgba(107, 74, 47, 0.4);
+  }
+
+  .plan-card.active {
+    border-color: {{ section.settings.accent_color }};
+    background: #FFFFFF;
+    box-shadow: 0 8px 20px rgba(107, 74, 47, 0.15);
+  }
+
+  .plan-duration {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+    pointer-events: none;
+  }
+
+  .plan-caps {
+    font-size: 1rem;
+    opacity: 0.6;
+    margin-bottom: 0.8rem;
+    pointer-events: none;
+  }
+
+  .plan-price-current {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: {{ section.settings.accent_color }};
+    pointer-events: none;
+  }
+
+  .plan-badge-discount {
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 0.4rem;
+    pointer-events: none;
+  }
+
+  /* Personalizador de Cápsulas con Stepper */
+  .capsule-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
+    background: #FAFAFA;
+  }
+
+  .capsule-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .capsule-thumb {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #23160F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.9rem;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .capsule-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: var(--montecapra-configurator-image-position, center);
-    filter: saturate(1.05) contrast(1.03);
   }
 
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__panel {
-    display: flex;
-    flex-direction: column;
-    padding: 32px;
-    border-radius: var(--montecapra-configurator-radius, 20px);
-    background: var(--montecapra-configurator-panel-bg, #fff);
-    box-shadow: 0 8px 28px rgba(35, 22, 15, 0.05);
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__steps {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin: 0 0 28px;
-    padding: 0;
-    list-style: none;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step-number {
-    display: inline-flex;
-    width: 30px;
-    height: 30px;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: var(--montecapra-configurator-accent, #6b4a2f);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step-title {
-    margin: 4px 0 0;
-    color: inherit;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step-description {
-    margin: 2px 0 0;
-    color: inherit;
-    opacity: 0.7;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__radio {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(35, 22, 15, 0.1);
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 20px 22px;
-    border: 1px solid rgba(35, 22, 15, 0.12);
-    border-radius: 16px;
-    cursor: pointer;
-    transition: border-color 220ms ease, background-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(35, 22, 15, 0.08);
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-badge {
-    position: absolute;
-    top: -10px;
-    right: 12px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: var(--montecapra-configurator-accent, #6b4a2f);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-name {
-    color: inherit;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-meta {
-    color: inherit;
-    opacity: 0.7;
-    font-size: 12px;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-price {
-    color: var(--montecapra-configurator-accent, #6b4a2f);
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summaries {
-    margin-top: 24px;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary {
-    display: none;
-    padding-top: 4px;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-image {
-    width: 100%;
-    max-width: 180px;
-    margin-bottom: 20px;
-    border-radius: calc(var(--montecapra-configurator-radius, 20px) - 4px);
-    object-fit: cover;
-    box-shadow: 0 10px 24px rgba(35, 22, 15, 0.1);
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-description {
-    margin: 0 0 10px;
-    color: inherit;
-    opacity: 0.8;
-    font-size: 14px;
-    line-height: 1.55;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-frequency {
-    margin: 0 0 14px;
-    color: inherit;
-    opacity: 0.7;
-    font-size: 13px;
-  }
-
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-price {
+  .capsule-name {
+    font-size: 1.2rem;
+    font-weight: 800;
     margin: 0;
-    color: var(--montecapra-configurator-accent, #6b4a2f);
-    font-size: 26px;
-    font-weight: 700;
   }
 
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-highlight {
-    margin: 8px 0 0;
-    color: inherit;
-    font-size: 13px;
-    font-weight: 500;
+  .capsule-desc {
+    font-size: 1rem;
+    opacity: 0.65;
+    margin: 0;
+    line-height: 1.3;
   }
 
-  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-button {
-    display: inline-flex;
-    width: 100%;
-    min-height: 50px;
+  .stepper-controls {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    margin-top: 22px;
-    padding: 12px 24px;
-    border: 1px solid var(--montecapra-configurator-button, #23160f);
-    border-radius: 999px;
-    background: var(--montecapra-configurator-button, #23160f);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    gap: 0.6rem;
+    background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 0.2rem 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .stepper-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: {{ section.settings.text_color }};
+    padding: 0 0.3rem;
+  }
+
+  .stepper-btn:active {
+    transform: scale(0.9);
+  }
+
+  .stepper-input {
+    width: 30px;
     text-align: center;
-    text-decoration: none;
-    transition: background-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 800;
+    background: transparent;
   }
 
-  {% for block in plan_blocks %}
-    #MontecapraSubscriptions-{{ section.id }} #MontecapraPlan-{{ section.id }}-{{ forloop.index }}:checked ~ .montecapra-configurator__options label[for="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"] {
-      border-color: var(--montecapra-configurator-accent, #6b4a2f);
-      background: rgba(107, 74, 47, 0.06);
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} #MontecapraPlan-{{ section.id }}-{{ forloop.index }}:checked ~ .montecapra-configurator__summaries .montecapra-configurator__summary[data-plan-index="{{ forloop.index }}"] {
-      display: block;
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} #MontecapraPlan-{{ section.id }}-{{ forloop.index }}:focus-visible ~ .montecapra-configurator__options label[for="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"] {
-      outline: 2px solid var(--montecapra-configurator-accent, #6b4a2f);
-      outline-offset: 2px;
-    }
-  {% endfor %}
-
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option:hover {
-      border-color: var(--montecapra-configurator-accent, #6b4a2f);
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(35, 22, 15, 0.14);
-    }
+  .frequency-select {
+    width: 100%;
+    padding: 1.1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.15);
+    background: #FAFAFA;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
   }
 
-  @media screen and (max-width: 989px) {
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__layout {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__media {
-      max-height: 60vh;
-      min-height: 260px;
-    }
+  .checkout-btn {
+    width: 100%;
+    background-color: {{ section.settings.button_color }};
+    color: #FFFFFF;
+    padding: 1.4rem;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 10px 25px rgba(35, 22, 15, 0.2);
   }
 
-  @media screen and (max-width: 749px) {
-    #MontecapraSubscriptions-{{ section.id }} {
-      padding: 52px 16px;
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__header {
-      margin-bottom: 32px;
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__heading {
-      font-size: 26px;
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__panel {
-      padding: 22px;
-    }
-
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__options {
-      flex-direction: column;
-    }
+  .checkout-btn:hover {
+    opacity: 0.95;
+    transform: translateY(-2px);
   }
+{%- endstyle -%}
 
-  @media (prefers-reduced-motion: reduce) {
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option,
-    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-button {
-      transition: none;
+<div class="subscriptions-section-{{ section.id }} section-{{ section.id }}-padding">
+  <div class="page-width">
+    <div class="sub-builder-container">
+      
+      <!-- Imagen arriba en móviles, lateral en desktop -->
+      <div class="sub-image-preview">
+        {%- if section.settings.main_image != blank -%}
+          {{ section.settings.main_image | image_url: width: 1000 | image_tag: loading: 'lazy', alt: 'Caja de suscripción Montecapra' }}
+        {%- else -%}
+          <img src="https://cdn.shopify.com/s/files/1/0658/5832/2592/files/montecapra-subscription-banner.png" alt="Suscripción Montecapra" loading="lazy">
+        {%- endif -%}
+      </div>
+
+      <!-- Panel Interactivo de Suscripción -->
+      <div class="sub-panel">
+        <h2 class="sub-title">{{ section.settings.title | default: 'Tu café favorito, siempre listo' }}</h2>
+        <p class="sub-subtitle">{{ section.settings.subtitle | default: 'Suscríbete y recibe MonteCapra en la puerta de tu casa.' }}</p>
+
+        <!-- PASO 1: Elige tu plan -->
+        <div class="step-label">
+          <span>1. Elige tu plan</span>
+        </div>
+        
+        <div class="plans-grid" id="plansGrid">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'plan' -%}
+              <div class="plan-card {% if forloop.index == 1 %}active{% endif %}" 
+                   data-caps="{{ block.settings.capsules_total | strip }}" 
+                   data-price="{{ block.settings.price_total | strip }}" 
+                   {{ block.shopify_attributes }}>
+                <div class="plan-duration">{{ block.settings.title }}</div>
+                <div class="plan-caps">{{ block.settings.subtitle_caps }}</div>
+                <div class="plan-price-current">${{ block.settings.price_total | strip }}</div>
+                {%- if block.settings.badge_text != blank and block.settings.badge_text != '-' -%}
+                  <div class="plan-badge-discount">{{ block.settings.badge_text }}</div>
+                {%- else -%}
+                  <div style="height: 20px;"></div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <!-- PASO 2: Personaliza tus cápsulas -->
+        <div class="step-label">
+          <span>2. Personaliza tus cápsulas</span>
+          <span id="totalCapsuleIndicator" style="font-size: 1.1rem; font-weight: 600; color: {{ section.settings.accent_color }};">Total ciclo: 10 cápsulas</span>
+        </div>
+
+        <!-- Renderizar Variedades Dinámicas desde Bloques -->
+        {%- assign variety_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'variety' -%}
+            {%- assign variety_index = variety_index | plus: 1 -%}
+            <div class="capsule-row" {{ block.shopify_attributes }}>
+              <div class="capsule-info">
+                <div class="capsule-thumb">
+                  {%- if block.settings.variety_image != blank -%}
+                    {{ block.settings.variety_image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                  {%- else -%}
+                    {{ block.settings.variety_letter | default: 'C' }}
+                  {%- endif -%}
+                </div>
+                <div>
+                  <p class="capsule-name">{{ block.settings.variety_name }}</p>
+                  <p class="capsule-desc">{{ block.settings.variety_desc }}</p>
+                </div>
+              </div>
+              <div class="stepper-controls">
+                <button type="button" class="stepper-btn minus" data-target="capsVariety{{ variety_index }}">-</button>
+                <input type="text" id="capsVariety{{ variety_index }}" class="stepper-input variety-input" value="{{ block.settings.default_qty | default: 0 }}" readonly>
+                <button type="button" class="stepper-btn plus" data-target="capsVariety{{ variety_index }}">+</button>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        <!-- PASO 3: Frecuencia de entrega -->
+        <div class="step-label" style="margin-top: 2rem;">
+          <span>3. Frecuencia de entrega</span>
+        </div>
+        <select class="frequency-select" id="frequencySelect">
+          <option value="mes">Entrega cada mes</option>
+          <option value="completo">Pedido completo</option>
+        </select>
+
+        <!-- Botón de Suscripción Masivo Dinámico -->
+        <button type="button" class="checkout-btn" id="checkoutButton">
+          Suscribirme | <span id="finalButtonPrice">$29.000</span> →
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lógica JavaScript -->
+<script>
+  (function() {
+    function initSubscriptions() {
+      const planCards = document.querySelectorAll(".plan-card");
+      const indicator = document.getElementById("totalCapsuleIndicator");
+      const finalPriceSpan = document.getElementById("finalButtonPrice");
+      const varietyInputs = document.querySelectorAll(".variety-input");
+      const stepperBtns = document.querySelectorAll(".stepper-btn");
+
+      if (!planCards.length || !varietyInputs.length) return;
+
+      let currentRequiredCaps = 10; 
+      let currentPlanPrice = 29000;
+
+      const defaultActive = document.querySelector(".plan-card.active") || planCards[0];
+      if (defaultActive) {
+        currentRequiredCaps = parseInt(defaultActive.getAttribute("data-caps"), 10) || 10;
+        currentPlanPrice = parseInt(defaultActive.getAttribute("data-price"), 10) || 29000;
+        if (finalPriceSpan) finalPriceSpan.textContent = "$" + currentPlanPrice.toLocaleString("es-CO");
+        if (indicator) indicator.textContent = `Total ciclo: ${currentRequiredCaps} cápsulas`;
+      }
+
+      function getTotalSum() {
+        let sum = 0;
+        varietyInputs.forEach(input => {
+          sum += parseInt(input.value, 10) || 0;
+        });
+        return sum;
+      }
+
+      planCards.forEach(card => {
+        card.onclick = function() {
+          planCards.forEach(c => c.classList.remove("active"));
+          this.classList.add("active");
+
+          currentRequiredCaps = parseInt(this.getAttribute("data-caps"), 10) || 10;
+          currentPlanPrice = parseInt(this.getAttribute("data-price"), 10) || 29000;
+
+          if (indicator) indicator.textContent = `Total ciclo: ${currentRequiredCaps} cápsulas`;
+          if (finalPriceSpan) finalPriceSpan.textContent = "$" + currentPlanPrice.toLocaleString("es-CO");
+
+          let count = varietyInputs.length;
+          let portion = currentRequiredCaps / count;
+          let assignedTotal = 0;
+
+          varietyInputs.forEach((input, idx) => {
+            let val = Math.round(portion / 10) * 10;
+            if (idx === count - 1) {
+              val = currentRequiredCaps - assignedTotal;
+            }
+            if (val < 0) val = 0;
+            input.value = val;
+            assignedTotal += val;
+          });
+        };
+      });
+
+      stepperBtns.forEach(btn => {
+        btn.onclick = function(e) {
+          e.preventDefault();
+          const targetInput = document.getElementById(this.getAttribute("data-target"));
+          if (!targetInput) return;
+
+          let val = parseInt(targetInput.value, 10) || 0;
+          let currentSum = getTotalSum();
+
+          if(this.classList.contains("plus")) {
+            if (currentSum + 10 > currentRequiredCaps) {
+              return; 
+            }
+            val += 10;
+          } else {
+            val = Math.max(0, val - 10);
+          }
+
+          targetInput.value = val;
+
+          let newSum = getTotalSum();
+
+          const activeCard = document.querySelector(".plan-card.active");
+          let basePrice = activeCard ? parseInt(activeCard.getAttribute("data-price"), 10) : 29000;
+          let baseCaps = activeCard ? parseInt(activeCard.getAttribute("data-caps"), 10) : 10;
+
+          if (baseCaps > 0) {
+            let unitPrice = basePrice / baseCaps;
+            currentPlanPrice = Math.round(newSum * unitPrice);
+          }
+
+          if (finalPriceSpan) finalPriceSpan.textContent = "$" + currentPlanPrice.toLocaleString("es-CO");
+
+          if (indicator) {
+            if (newSum !== currentRequiredCaps) {
+              indicator.style.color = "#d32f2f";
+              indicator.textContent = `Atención: Tienes ${newSum} de ${currentRequiredCaps} cápsulas`;
+            } else {
+              indicator.style.color = "{{ section.settings.accent_color }}";
+              indicator.textContent = `Total ciclo: ${newSum} cápsulas`;
+            }
+          }
+        };
+      });
     }
-  }
-{% endstyle %}
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initSubscriptions);
+    } else {
+      initSubscriptions();
+    }
+  })();
+</script>
 
 {% schema %}
 {
-  "name": "Suscripciones café",
+  "name": "Suscripciones café 2",
   "tag": "section",
   "class": "section",
   "settings": [
     {
-      "type": "text",
-      "id": "heading",
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Imagen principal de la caja"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
       "label": "Título",
       "default": "Tu café favorito, siempre listo"
     },
     {
-      "type": "textarea",
-      "id": "subheading",
+      "type": "inline_richtext",
+      "id": "subtitle",
       "label": "Subtítulo",
-      "default": "Personaliza tu suscripción y recibe MonteCapra en la puerta de tu casa"
-    },
-    {
-      "type": "image_picker",
-      "id": "lifestyle_image",
-      "label": "Imagen lifestyle"
-    },
-    {
-      "type": "text",
-      "id": "lifestyle_image_alt",
-      "label": "Texto alternativo de la imagen"
+      "default": "Suscríbete y recibe MonteCapra en la puerta de tu casa."
     },
     {
       "type": "color",
-      "id": "section_background",
+      "id": "background_color",
       "label": "Fondo de sección",
-      "default": "#f7f4ef"
-    },
-    {
-      "type": "color",
-      "id": "card_background",
-      "label": "Fondo de tarjetas",
-      "default": "#ffffff"
+      "default": "#F7F4EF"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Color de texto",
-      "default": "#23160f"
+      "default": "#23160F"
     },
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Color de acento (plan destacado)",
-      "default": "#6b4a2f"
+      "label": "Color de acento",
+      "default": "#6B4A2F"
     },
     {
       "type": "color",
       "id": "button_color",
       "label": "Color de botón",
-      "default": "#23160f"
+      "default": "#23160F"
     },
     {
       "type": "range",
-      "id": "card_radius",
-      "label": "Radio de bordes de tarjetas",
+      "id": "padding_top",
       "min": 0,
-      "max": 40,
-      "step": 2,
+      "max": 100,
+      "step": 4,
       "unit": "px",
-      "default": 20
+      "label": "Espacio superior",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Espacio inferior",
+      "default": 48
     }
   ],
   "blocks": [
-    {
-      "type": "step",
-      "name": "Paso",
-      "settings": [
-        {
-          "type": "text",
-          "id": "step_title",
-          "label": "Título del paso"
-        },
-        {
-          "type": "textarea",
-          "id": "step_description",
-          "label": "Descripción"
-        }
-      ]
-    },
     {
       "type": "plan",
       "name": "Plan de suscripción",
       "settings": [
         {
           "type": "text",
-          "id": "plan_name",
-          "label": "Nombre del plan",
-          "default": "Explorador"
-        },
-        {
-          "type": "textarea",
-          "id": "plan_description",
-          "label": "Descripción"
+          "id": "title",
+          "label": "Nombre del plan (ej. 1 mes)",
+          "default": "1 mes"
         },
         {
           "type": "text",
-          "id": "capsule_count",
-          "label": "Cantidad de cápsulas",
-          "default": "20 cápsulas"
-        },
-        {
-          "type": "select",
-          "id": "frequency",
-          "label": "Frecuencia de entrega",
-          "options": [
-            { "value": "weekly", "label": "Semanal" },
-            { "value": "biweekly", "label": "Quincenal" },
-            { "value": "monthly", "label": "Mensual" }
-          ],
-          "default": "monthly"
+          "id": "subtitle_caps",
+          "label": "Texto cantidad de cápsulas (ej. 10 cápsulas)",
+          "default": "10 cápsulas"
         },
         {
           "type": "text",
-          "id": "price",
-          "label": "Precio (texto)",
-          "default": "$65.000/mes"
+          "id": "capsules_total",
+          "label": "Número total de cápsulas para calculadora (ej. 10)",
+          "default": "10"
         },
         {
           "type": "text",
-          "id": "highlight",
-          "label": "Beneficio destacado",
-          "default": "Envío gratis"
-        },
-        {
-          "type": "checkbox",
-          "id": "featured",
-          "label": "Marcar como plan recomendado",
-          "default": false
+          "id": "price_total",
+          "label": "Precio total en números (ej. 29000)",
+          "default": "29000"
         },
         {
           "type": "text",
-          "id": "featured_label",
-          "label": "Etiqueta de destacado",
-          "default": "Más popular"
+          "id": "badge_text",
+          "label": "Etiqueta (ej. 10% OFF o pon un guion si no lleva)",
+          "default": "-"
+        }
+      ]
+    },
+    {
+      "type": "variety",
+      "name": "Variedad de café",
+      "settings": [
+        {
+          "type": "text",
+          "id": "variety_name",
+          "label": "Nombre de la variedad (ej. Reserva)",
+          "default": "Reserva"
+        },
+        {
+          "type": "text",
+          "id": "variety_desc",
+          "label": "Descripción corta",
+          "default": "Espresso intenso. Notas a cacao y frutos secos."
+        },
+        {
+          "type": "text",
+          "id": "variety_letter",
+          "label": "Letra o inicial si no hay imagen (ej. R)",
+          "default": "R"
         },
         {
           "type": "image_picker",
-          "id": "image",
-          "label": "Imagen opcional"
+          "id": "variety_image",
+          "label": "Imagen o ícono miniatura (Opcional)"
         },
         {
           "type": "text",
-          "id": "button_label",
-          "label": "Texto del botón",
-          "default": "Elegir plan"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "Enlace del botón"
+          "id": "default_qty",
+          "label": "Cantidad por defecto al cargar (ej. 10)",
+          "default": "10"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Suscripciones café",
+      "name": "Suscripciones café 2",
       "blocks": [
-        { "type": "step" },
-        { "type": "step" },
-        { "type": "step" },
-        { "type": "plan" },
-        { "type": "plan" },
-        { "type": "plan" }
+        {
+          "type": "plan",
+          "settings": {
+            "title": "1 mes",
+            "subtitle_caps": "10 cápsulas",
+            "capsules_total": "10",
+            "price_total": "29000",
+            "badge_text": "-"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "title": "3 meses",
+            "subtitle_caps": "60 cápsulas",
+            "capsules_total": "60",
+            "price_total": "156600",
+            "badge_text": "10% OFF"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "title": "6 meses",
+            "subtitle_caps": "120 cápsulas",
+            "capsules_total": "120",
+            "price_total": "278400",
+            "badge_text": "20% OFF"
+          }
+        },
+        {
+          "type": "variety",
+          "settings": {
+            "variety_name": "Reserva",
+            "variety_desc": "Espresso intenso. Notas a cacao y frutos secos.",
+            "variety_letter": "R",
+            "default_qty": "10"
+          }
+        },
+        {
+          "type": "variety",
+          "settings": {
+            "variety_name": "Siena",
+            "variety_desc": "Lungo suave. Notas a caramelo y chocolate.",
+            "variety_letter": "S",
+            "default_qty": "0"
+          }
+        },
+        {
+          "type": "variety",
+          "settings": {
+            "variety_name": "Dark",
+            "variety_desc": "Equilibrado y suave. Notas a panela.",
+            "variety_letter": "D",
+            "default_qty": "0"
+          }
+        }
       ]
     }
   ]

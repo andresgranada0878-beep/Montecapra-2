@@ -11,17 +11,34 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
+    "barrasuperior_RKX9xL": {
+      "type": "barrasuperior",
+      "name": "Barra Superior Montecapra",
+      "settings": {
+        "announcement_text": "Obtén 10% OFF en tu primera compra",
+        "discount_code": "Código: MONTE10",
+        "instagram_url": "",
+        "whatsapp_url": "",
+        "rappi_url": "",
+        "bg_color": "#faf8f3",
+        "box_bg": "#1A211E",
+        "text_color": "#F1E68D",
+        "accent_color": "#FFFFFF",
+        "border_radius": 24
+      }
+    },
     "header_ceCwaF": {
       "type": "header",
+      "custom_css": [],
       "name": "Header Montecapra",
       "settings": {
-        "announcement_text": "Café colombiano de origen",
         "logo": "shopify://shop_images/logo-png-montecapra.avif",
         "menu": "men-principal-montecapra"
       }
     }
   },
   "order": [
+    "barrasuperior_RKX9xL",
     "header_ceCwaF"
   ]
 }

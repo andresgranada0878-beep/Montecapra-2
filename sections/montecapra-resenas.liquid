@@ -1,462 +1,548 @@
-{% liquid
-  assign review_blocks = section.blocks | where: 'type', 'review'
-  assign desktop_visible = section.settings.desktop_visible | default: 3
-%}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
-<section
-  id="MontecapraReviews-{{ section.id }}"
-  class="montecapra-reviews"
-  {% if section.settings.heading != blank %}aria-labelledby="MontecapraReviewsHeading-{{ section.id }}"{% endif %}
-  style="--montecapra-reviews-visible: {{ desktop_visible }};"
->
-  <div class="montecapra-reviews__container">
-    {% if section.settings.heading != blank or section.settings.subheading != blank %}
-      <header class="montecapra-reviews__header">
-        {% if section.settings.heading != blank %}
-          <h2 class="montecapra-reviews__heading" id="MontecapraReviewsHeading-{{ section.id }}">
-            {{ section.settings.heading | escape }}
-          </h2>
-        {% endif %}
-        {% if section.settings.subheading != blank %}
-          <p class="montecapra-reviews__subheading">{{ section.settings.subheading | escape }}</p>
-        {% endif %}
-      </header>
-    {% endif %}
-
-    {% if review_blocks.size > 0 %}
-      <ul class="montecapra-reviews__grid" role="list">
-        {% for block in review_blocks %}
-          {% liquid
-            assign visual_image = block.settings.customer_photo
-            if visual_image == blank
-              assign visual_image = block.settings.related_product_image
-            endif
-            if visual_image == blank and block.settings.related_product != blank
-              assign visual_image = block.settings.related_product.featured_image
-            endif
-
-            assign product_tag_image = block.settings.related_product_image
-            if product_tag_image == blank and block.settings.related_product != blank
-              assign product_tag_image = block.settings.related_product.featured_image
-            endif
-          %}
-          <li class="montecapra-reviews__card{% if visual_image == blank %} montecapra-reviews__card--no-image{% endif %}" {{ block.shopify_attributes }}>
-            {% if visual_image != blank %}
-              <div class="montecapra-reviews__visual">
-                {{
-                  visual_image
-                  | image_url: width: 640
-                  | image_tag:
-                    widths: '320, 480, 640',
-                    sizes: '(min-width: 990px) 30vw, 85vw',
-                    loading: 'lazy',
-                    alt: block.settings.customer_name,
-                    class: 'montecapra-reviews__visual-image'
-                }}
-              </div>
-            {% endif %}
-
-            <div class="montecapra-reviews__body">
-              {% if block.settings.comment != blank %}
-                <p class="montecapra-reviews__comment">{{ block.settings.comment | escape }}</p>
-              {% endif %}
-
-              <div class="montecapra-reviews__meta">
-                <div class="montecapra-reviews__author">
-                  {% if block.settings.customer_name != blank %}
-                    <strong class="montecapra-reviews__author-name">{{ block.settings.customer_name | escape }}</strong>
-                  {% endif %}
-                  {% if block.settings.customer_city != blank %}
-                    <span class="montecapra-reviews__author-city">{{ block.settings.customer_city | escape }}</span>
-                  {% endif %}
-                </div>
-
-                {% if block.settings.rating > 0 %}
-                  <div class="montecapra-reviews__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
-                    {% for i in (1..5) %}
-                      <span class="montecapra-reviews__star{% if i > block.settings.rating %} montecapra-reviews__star--empty{% endif %}">★</span>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-              </div>
-
-              {% if block.settings.related_product != blank %}
-                <a href="{{ block.settings.related_product.url }}" class="montecapra-reviews__product">
-                  {% if product_tag_image != blank %}
-                    {{
-                      product_tag_image
-                      | image_url: width: 64
-                      | image_tag:
-                        widths: '32, 64',
-                        sizes: '32px',
-                        loading: 'lazy',
-                        alt: block.settings.related_product.title,
-                        class: 'montecapra-reviews__product-image'
-                    }}
-                  {% endif %}
-                  <span>Disfrutó: {{ block.settings.related_product.title }}</span>
-                </a>
-              {% endif %}
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  </div>
-</section>
-
-{% style %}
-  #MontecapraReviews-{{ section.id }} {
-    --montecapra-reviews-bg: {{ section.settings.section_background }};
-    --montecapra-reviews-card-bg: {{ section.settings.card_background }};
-    --montecapra-reviews-text: {{ section.settings.text_color }};
-    --montecapra-reviews-accent: {{ section.settings.accent_color }};
-    --montecapra-reviews-star: {{ section.settings.star_color }};
-    --montecapra-reviews-radius: {{ section.settings.card_radius }}px;
-    padding: 80px 24px;
-    background: var(--montecapra-reviews-bg, #f7f4ef);
-    color: var(--montecapra-reviews-text, #23160f);
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    background-color: {{ section.settings.background_color | default: '#F7F4EF' }};
+    color: {{ section.settings.text_color | default: '#23160F' }};
   }
 
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__container {
-    max-width: 1200px;
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .reviews-section-container {
+    max-width: 1300px;
     margin: 0 auto;
+    padding: 0 1.5rem;
   }
 
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__header {
-    max-width: 640px;
-    margin: 0 auto 48px;
+  /* Cabecera: Títulos y Poderes */
+  .reviews-header {
     text-align: center;
+    margin-bottom: 3.5rem;
   }
 
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__heading {
-    margin: 0;
-    color: inherit;
-    font-size: 34px;
-    font-weight: 400;
-    line-height: 1.2;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__subheading {
-    margin: 14px 0 0;
-    color: inherit;
-    opacity: 0.75;
-    font-size: 16px;
-    line-height: 1.5;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__grid {
-    display: grid;
-    grid-template-columns: repeat(var(--montecapra-reviews-visible, 3), minmax(0, 1fr));
-    gap: 28px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__card {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid rgba(35, 22, 15, 0.08);
-    border-radius: var(--montecapra-reviews-radius, 18px);
-    background: var(--montecapra-reviews-card-bg, #fff);
-    box-shadow: 0 10px 28px rgba(35, 22, 15, 0.06);
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 3 / 4;
-    background: #eee9e1;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual::after {
-    content: '';
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 45%;
-    background: linear-gradient(to top, var(--montecapra-reviews-card-bg, #fff), transparent);
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__body {
-    position: relative;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: 28px 26px 26px;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__card--no-image .montecapra-reviews__body {
-    padding-top: 34px;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__body::before {
-    content: '\201C';
-    position: absolute;
-    top: -4px;
-    left: 20px;
-    color: var(--montecapra-reviews-accent, #6b4a2f);
-    font-size: 64px;
-    font-family: Georgia, 'Times New Roman', serif;
-    line-height: 1;
-    opacity: 0.16;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__comment {
-    position: relative;
-    margin: 0 0 22px;
-    color: inherit;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 18px;
-    font-style: italic;
-    line-height: 1.55;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid rgba(35, 22, 15, 0.1);
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__author {
-    display: flex;
-    flex-direction: column;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__author-name {
-    color: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__author-city {
-    color: inherit;
-    opacity: 0.6;
-    font-size: 11px;
+  .reviews-eyebrow {
+    font-size: 1.1rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    opacity: 0.7;
+    margin-bottom: 0.8rem;
   }
 
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__stars {
-    display: flex;
-    flex-shrink: 0;
-    gap: 2px;
-    color: var(--montecapra-reviews-star, #b8863b);
-    font-size: 11px;
+  .reviews-main-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin: 0;
   }
 
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__star--empty {
-    opacity: 0.25;
+  @media screen and (min-width: 750px) {
+    .reviews-main-title {
+      font-size: 3.8rem;
+    }
   }
 
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__product {
+  /* Iconos de Beneficios ("Todos los poderes") */
+  .powers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin-top: 2.5rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .powers-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .power-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(35, 22, 15, 0.1);
-    color: inherit;
-    font-size: 12px;
-    font-weight: 500;
-    text-decoration: none;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    border: 1px solid rgba(107, 74, 47, 0.08);
   }
 
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__product:hover {
-    color: var(--montecapra-reviews-accent, #6b4a2f);
-  }
-
-  #MontecapraReviews-{{ section.id }} .montecapra-reviews__product-image {
-    width: 32px;
-    height: 32px;
+  .power-icon {
+    width: 42px;
+    height: 42px;
+    background: {{ section.settings.accent_color | default: '#6B4A2F' }};
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
     flex-shrink: 0;
-    border-radius: 8px;
+  }
+
+  .power-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  /* Carrusel de Reseñas */
+  .reviews-carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    padding: 1rem 0;
+  }
+
+  .reviews-track {
+    display: flex;
+    gap: 2rem;
+    transition: transform 0.4s ease-in-out;
+    will-change: transform;
+  }
+
+  .review-card {
+    background: {{ section.settings.card_background | default: '#FFFFFF' }};
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+
+  @media screen and (min-width: 750px) {
+    .review-card {
+      flex: 0 0 calc(33.333% - 1.34rem);
+    }
+  }
+
+  .review-stars {
+    color: {{ section.settings.star_color | default: '#B8863B' }};
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+  }
+
+  .review-quote {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    flex-grow: 1;
+  }
+
+  .review-author-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding-top: 1.5rem;
+  }
+
+  .review-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     object-fit: cover;
   }
 
-  @media screen and (min-width: 750px) and (max-width: 989px) {
-    #MontecapraReviews-{{ section.id }} .montecapra-reviews__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .review-author-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 0 0 0.2rem 0;
   }
 
-  @media screen and (max-width: 749px) {
-    #MontecapraReviews-{{ section.id }} {
-      padding: 52px 0;
-    }
-
-    #MontecapraReviews-{{ section.id }} .montecapra-reviews__container {
-      padding: 0 16px;
-    }
-
-    #MontecapraReviews-{{ section.id }} .montecapra-reviews__header {
-      margin-bottom: 32px;
-    }
-
-    #MontecapraReviews-{{ section.id }} .montecapra-reviews__heading {
-      font-size: 26px;
-    }
-
-    #MontecapraReviews-{{ section.id }} .montecapra-reviews__grid {
-      display: flex;
-      gap: 16px;
-      margin: 0 -16px;
-      padding: 0 16px 8px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    #MontecapraReviews-{{ section.id }} .montecapra-reviews__card {
-      width: 82vw;
-      flex-shrink: 0;
-      scroll-snap-align: start;
-    }
-
-    #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual {
-      aspect-ratio: 4 / 3;
-    }
+  .review-verified {
+    font-size: 0.9rem;
+    opacity: 0.65;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
   }
-{% endstyle %}
+
+  .review-verified svg {
+    width: 14px;
+    height: 14px;
+    fill: #2e7d32;
+  }
+
+  /* Controles del Carrusel (Flechas y Puntos) */
+  .carousel-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .carousel-btn {
+    background: #FFFFFF;
+    border: 2px solid rgba(107, 74, 47, 0.2);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: {{ section.settings.accent_color | default: '#6B4A2F' }};
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  }
+
+  .carousel-btn:hover {
+    background: {{ section.settings.accent_color | default: '#6B4A2F' }};
+    color: #FFFFFF;
+    border-color: {{ section.settings.accent_color | default: '#6B4A2F' }};
+  }
+
+  .carousel-dots {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(107, 74, 47, 0.2);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .dot.active {
+    background: {{ section.settings.accent_color | default: '#6B4A2F' }};
+    width: 24px;
+    border-radius: 6px;
+  }
+{%- endstyle -%}
+
+<div class="reviews-section-{{ section.id }} section-{{ section.id }}-padding">
+  <div class="reviews-section-container">
+    
+    <!-- Cabecera con Título y Beneficios -->
+    <div class="reviews-header">
+      <div class="reviews-eyebrow">{{ section.settings.eyebrow_text | default: 'Lo que dicen nuestros clientes' }}</div>
+      <h2 class="reviews-main-title">{{ section.settings.main_title | default: 'Todos los poderes, en cada taza' }}</h2>
+
+      <!-- Cuadrícula de Beneficios / Poderes -->
+      <div class="powers-grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'power' -%}
+            <div class="power-item" {{ block.shopify_attributes }}>
+              <div class="power-icon">
+                {%- if block.settings.icon_symbol != blank -%}
+                  {{ block.settings.icon_symbol }}
+                {%- else -%}
+                  ✦
+                {%- endif -%}
+              </div>
+              <p class="power-text">{{ block.settings.power_title }}</p>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <!-- Carrusel de Reseñas -->
+    <div class="reviews-carousel-wrapper">
+      <div class="reviews-track" id="reviewsTrack">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'review' -%}
+            <div class="review-card" {{ block.shopify_attributes }}>
+              <div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-quote">"{{ block.settings.quote }}"</p>
+              </div>
+              <div class="review-author-wrapper">
+                {%- if block.settings.author_image != blank -%}
+                  {{ block.settings.author_image | image_url: width: 150 | image_tag: class: 'review-avatar', loading: 'lazy' }}
+                {%- else -%}
+                  <img src="https://cdn.shopify.com/s/files/1/0658/5832/2592/files/placeholder-avatar.png" class="review-avatar" alt="Cliente" loading="lazy" width="50" height="50">
+                {%- endif -%}
+                <div>
+                  <h4 class="review-author-name">{{ block.settings.author_name }}</h4>
+                  <p class="review-verified">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.15 9 19.15 20 8.15 18.5 6.7z"/></svg>
+                    Cliente verificado
+                  </p>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <!-- Controles de navegación del carrusel -->
+    <div class="carousel-controls">
+      <button type="button" class="carousel-btn" id="prevReviewBtn" aria-label="Anterior">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button type="button" class="carousel-btn" id="nextReviewBtn" aria-label="Siguiente">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Script del carrusel dinámico -->
+<script>
+  (function() {
+    function initReviewsCarousel() {
+      const track = document.getElementById("reviewsTrack");
+      const prevBtn = document.getElementById("prevReviewBtn");
+      const nextBtn = document.getElementById("nextReviewBtn");
+      const dotsContainer = document.getElementById("carouselDots");
+      
+      if (!track) return;
+      const cards = track.querySelectorAll(".review-card");
+      if (cards.length === 0) return;
+
+      let currentIndex = 0;
+      
+      function getCardsPerView() {
+        return window.innerWidth >= 750 ? 3 : 1;
+      }
+
+      let maxIndex = Math.max(0, cards.length - getCardsPerView());
+
+      // Crear puntos indicadores
+      dotsContainer.innerHTML = "";
+      const totalDots = maxIndex + 1;
+      for (let i = 0; i <= maxIndex; i++) {
+        const dot = document.createElement("div");
+        dot.classList.add("dot");
+        if (i === 0) dot.classList.add("active");
+        dot.addEventListener("click", () => {
+          currentIndex = i;
+          updateCarousel();
+        });
+        dotsContainer.appendChild(dot);
+      }
+
+      function updateCarousel() {
+        const cardWidth = cards[0].getBoundingClientRect().width;
+        const gap = 32; // 2rem gap
+        const offset = -currentIndex * (cardWidth + (window.innerWidth >= 750 ? gap : 0));
+        track.style.transform = `translateX(${offset}px)`;
+
+        const dots = dotsContainer.querySelectorAll(".dot");
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle("active", idx === currentIndex);
+        });
+      }
+
+      nextBtn.addEventListener("click", () => {
+        maxIndex = Math.max(0, cards.length - getCardsPerView());
+        currentIndex = currentIndex < maxIndex ? currentIndex + 1 : 0;
+        updateCarousel();
+      });
+
+      prevBtn.addEventListener("click", () => {
+        maxIndex = Math.max(0, cards.length - getCardsPerView());
+        currentIndex = currentIndex > 0 ? currentIndex - 1 : maxIndex;
+        updateCarousel();
+      });
+
+      window.addEventListener("resize", () => {
+        maxIndex = Math.max(0, cards.length - getCardsPerView());
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+        updateCarousel();
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initReviewsCarousel);
+    } else {
+      initReviewsCarousel();
+    }
+  })();
+</script>
 
 {% schema %}
 {
-  "name": "Rese\u00f1as de clientes",
+  "name": "Reseñas con Poderes",
   "tag": "section",
   "class": "section",
   "settings": [
     {
       "type": "text",
-      "id": "heading",
-      "label": "T\u00edtulo",
-      "default": "Lo que dice nuestra comunidad"
+      "id": "eyebrow_text",
+      "label": "Texto superior pequeño",
+      "default": "LO QUE DICEN NUESTROS CLIENTES"
     },
     {
-      "type": "textarea",
-      "id": "subheading",
-      "label": "Subt\u00edtulo",
-      "default": "Experiencias reales de quienes ya disfrutan MonteCapra"
+      "type": "inline_richtext",
+      "id": "main_title",
+      "label": "Título principal",
+      "default": "Todos los poderes, en cada taza"
     },
     {
       "type": "color",
-      "id": "section_background",
-      "label": "Fondo de secci\u00f3n",
-      "default": "#f7f4ef"
+      "id": "background_color",
+      "label": "Color de fondo de sección",
+      "default": "#F7F4EF"
     },
     {
       "type": "color",
       "id": "card_background",
-      "label": "Fondo de tarjetas",
-      "default": "#ffffff"
+      "label": "Fondo de tarjetas de reseña",
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Color de texto",
-      "default": "#23160f"
+      "default": "#23160F"
     },
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Color de acento",
-      "default": "#6b4a2f"
+      "label": "Color de acento (Iconos)",
+      "default": "#6B4A2F"
     },
     {
       "type": "color",
       "id": "star_color",
       "label": "Color de estrellas",
-      "default": "#b8863b"
+      "default": "#B8863B"
     },
     {
       "type": "range",
-      "id": "card_radius",
-      "label": "Radio de bordes",
+      "id": "padding_top",
       "min": 0,
-      "max": 40,
-      "step": 2,
+      "max": 100,
+      "step": 4,
       "unit": "px",
-      "default": 18
+      "label": "Espacio superior",
+      "default": 48
     },
     {
       "type": "range",
-      "id": "desktop_visible",
-      "label": "Rese\u00f1as visibles en escritorio",
-      "min": 2,
-      "max": 4,
-      "step": 1,
-      "default": 3
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Espacio inferior",
+      "default": 48
     }
   ],
   "blocks": [
     {
-      "type": "review",
-      "name": "Rese\u00f1a",
+      "type": "power",
+      "name": "Beneficio / Poder",
       "settings": [
         {
           "type": "text",
-          "id": "customer_name",
-          "label": "Nombre del cliente"
+          "id": "icon_symbol",
+          "label": "Emoji o ícono (ej. ⚡, 🧠, 🛡️)",
+          "default": "⚡"
         },
         {
           "type": "text",
-          "id": "customer_city",
-          "label": "Ciudad"
-        },
-        {
-          "type": "image_picker",
-          "id": "customer_photo",
-          "label": "Foto del cliente (opcional)"
-        },
+          "id": "power_title",
+          "label": "Título del beneficio",
+          "default": "Energía natural"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Reseña de cliente",
+      "settings": [
         {
           "type": "textarea",
-          "id": "comment",
-          "label": "Comentario"
+          "id": "quote",
+          "label": "Comentario de la reseña",
+          "default": "Me encanta el sabor y cómo me da energía sin sentirme acelerada. MonteCapra se volvió parte de mi rutina diaria."
         },
         {
-          "type": "range",
-          "id": "rating",
-          "label": "Estrellas",
-          "min": 1,
-          "max": 5,
-          "step": 1,
-          "default": 5
-        },
-        {
-          "type": "product",
-          "id": "related_product",
-          "label": "Producto asociado (opcional)"
+          "type": "text",
+          "id": "author_name",
+          "label": "Nombre del cliente",
+          "default": "Laura M."
         },
         {
           "type": "image_picker",
-          "id": "related_product_image",
-          "label": "Imagen del producto (opcional)"
+          "id": "author_image",
+          "label": "Foto del cliente"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Rese\u00f1as de clientes",
+      "name": "Reseñas con Poderes",
       "blocks": [
-        { "type": "review" },
-        { "type": "review" },
-        { "type": "review" }
+        {
+          "type": "power",
+          "settings": { "icon_symbol": "⚡", "power_title": "Energía natural" }
+        },
+        {
+          "type": "power",
+          "settings": { "icon_symbol": "🧠", "power_title": "Enfoque y claridad" }
+        },
+        {
+          "type": "power",
+          "settings": { "icon_symbol": "🛡️", "power_title": "Sistema inmune fuerte" }
+        },
+        {
+          "type": "power",
+          "settings": { "icon_symbol": "🌿", "power_title": "Antioxidantes y bienestar" }
+        },
+        {
+          "type": "power",
+          "settings": { "icon_symbol": "🍃", "power_title": "Digestión más ligera" }
+        },
+        {
+          "type": "power",
+          "settings": { "icon_symbol": "😊", "power_title": "Mejor estado de ánimo" }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Me encanta el sabor y cómo me da energía sin sentirme acelerada. MonteCapra se volvió parte de mi rutina diaria.",
+            "author_name": "Laura M."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Se nota la calidad. Es un café suave, con un sabor increíble y me ayuda a mantenerme enfocado todo el día.",
+            "author_name": "Andrés C."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "El combo de suscripción es perfecto. Recibo mis cápsulas a tiempo, con el sabor que más me gusta y a un mejor precio.",
+            "author_name": "Camila R."
+          }
+        }
       ]
     }
   ]
 }
 {% endschema %}
-

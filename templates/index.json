@@ -31,7 +31,7 @@
         "slide_jDG46D": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/caf-colombiano.png",
+            "image_desktop": "shopify://shop_images/montecapra-hero-banner.png",
             "eyebrow": "",
             "eyebrow_size": 12,
             "title": "Café colombiano de origen",
@@ -71,13 +71,17 @@
         "slide_jDG46D",
         "slide_RWwRdx"
       ],
+      "custom_css": [
+        ".montecapra-hero {padding-bottom: 10px !important;}"
+      ],
       "name": "Hero Montecapra",
       "settings": {
         "overlay_opacity": 30,
         "fade_duration": 500,
         "ken_burns_duration": 12,
         "content_animation": "fade-up",
-        "hero_height": 760
+        "hero_height": 680,
+        "padding_bottom": 0
       }
     },
     "montecapra_marquee_mfjLF4": {
@@ -116,9 +120,9 @@
       ],
       "name": "Marquee Montecapra",
       "settings": {
-        "background_color": "#fcc986",
-        "text_color": "#000000",
-        "font_size": 14,
+        "background_color": "#1a211e",
+        "text_color": "#f1e68d",
+        "font_size": 21,
         "item_gap": 52,
         "speed": 40
       }
@@ -127,10 +131,270 @@
       "type": "montecapra-productos-editorial",
       "name": "Productos MonteCapra",
       "settings": {
-        "titulo": "Nuestros cafés",
+        "heading": "Productos",
         "collection": "cafes-montecapra",
-        "columns_desktop": "4",
-        "columns_mobile": "2"
+        "product_count": "4",
+        "desktop_columns": "4",
+        "show_price": true,
+        "show_coffee_info": true,
+        "show_button": true,
+        "show_badge": true,
+        "button_label": "Descubrir café",
+        "section_background": "#f7f4ef",
+        "card_background": "#ffffff",
+        "text_color": "#23160f",
+        "button_color": "#23160f",
+        "card_radius": 28
+      }
+    },
+    "montecapra_suscripciones_4BiCEm": {
+      "type": "montecapra-suscripciones",
+      "blocks": {
+        "variety_mxaYhX": {
+          "type": "variety",
+          "settings": {
+            "variety_name": "Reserva",
+            "variety_desc": "Espresso intenso. Notas a cacao y frutos secos.",
+            "variety_letter": "D",
+            "variety_image": "shopify://shop_images/Monte-Capra29584.webp",
+            "default_qty": "10"
+          }
+        },
+        "variety_8ELN9a": {
+          "type": "variety",
+          "settings": {
+            "variety_name": "Siena",
+            "variety_desc": "Espresso intenso. Notas a cacao y frutos secos.",
+            "variety_letter": "D",
+            "variety_image": "shopify://shop_images/DSC5735_20MB_20MP_1.webp",
+            "default_qty": "10"
+          }
+        },
+        "variety_wgGDtR": {
+          "type": "variety",
+          "settings": {
+            "variety_name": "Dark",
+            "variety_desc": "Espresso intenso. Notas a cacao y frutos secos.",
+            "variety_letter": "D",
+            "variety_image": "shopify://shop_images/DSC5762_1.webp",
+            "default_qty": "10"
+          }
+        },
+        "plan_ejd3qW": {
+          "type": "plan",
+          "settings": {
+            "title": "1 meses",
+            "subtitle_caps": "10 cápsulas",
+            "capsules_total": "10",
+            "price_total": "29000",
+            "badge_text": "-"
+          }
+        },
+        "plan_B64N9k": {
+          "type": "plan",
+          "settings": {
+            "title": "1 mes",
+            "subtitle_caps": "20 cápsulas",
+            "capsules_total": "20",
+            "price_total": "59000",
+            "badge_text": "-"
+          }
+        },
+        "plan_qtLVpr": {
+          "type": "plan",
+          "settings": {
+            "title": "3 meses",
+            "subtitle_caps": "60 cápsulas",
+            "capsules_total": "60",
+            "price_total": "85000",
+            "badge_text": "-"
+          }
+        }
+      },
+      "block_order": [
+        "variety_mxaYhX",
+        "variety_8ELN9a",
+        "variety_wgGDtR",
+        "plan_ejd3qW",
+        "plan_B64N9k",
+        "plan_qtLVpr"
+      ],
+      "name": "Suscripciones café 2",
+      "settings": {
+        "main_image": "shopify://shop_images/caf-colombiano.png",
+        "title": "<strong>Únete a la suscripción y disfruta tu café favorito sin preocupaciones&nbsp;</strong>",
+        "subtitle": "&nbsp;Elige tu plan ideal, personaliza tus cápsulas de 10 en 10 y recibe frescura garantizada cada mes con beneficios exclusivos.&nbsp;",
+        "background_color": "#f7f4ef",
+        "text_color": "#23160f",
+        "accent_color": "#6b4a2f",
+        "button_color": "#23160f",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "montecapra_maquila_gYBgwT": {
+      "type": "montecapra-maquila",
+      "blocks": {
+        "step_9qGJgB": {
+          "type": "step",
+          "settings": {
+            "step_image": "shopify://shop_images/8BMHybGz0j5JKAjyCvVpI3OGLfyB_ww4ZbSq1SQ7zrFxwqGc5NtDntlx2B1smXKtqn7z78PPsnFWRFjlGpoL4Wtlt35kC6ZLTUkPrjhKfKQIGORTaQfc_SNrP5SwvDEXY5Hz92gNxdlLd7s_7l78lTvra6L0QrSgcM9XyMEmzw1pfv8QTTda-jA.jpg",
+            "step_title": "Selecciona tu café",
+            "step_desc": "Define el perfil, origen, tostión e intensidad que representa tu marca."
+          }
+        },
+        "step_TPzgTT": {
+          "type": "step",
+          "settings": {
+            "step_image": "shopify://shop_images/KkL_QJdxviWrC-geXXw3w6yMASxi6rVwwhoHCBhnSTlESSg8qD3bADhAEX1kwLDgVv15s3NLhLXI6RiT85aItiRRlExzyJsLTCFyPfkxtUrjXh-81JzHHInLuWUVNx6GID4Bmj2MzO3HMBeIfE4j7iuM2DxwxMjYb8mvcGDjzDE.jpg",
+            "step_title": "Diseñamos tu cápsula",
+            "step_desc": "Creamos una presentación alineada con la identidad de tu negocio."
+          }
+        },
+        "step_eTJzia": {
+          "type": "step",
+          "settings": {
+            "step_image": "shopify://shop_images/BQP-tdYj_978H5K93bANimDpb1WS1p2varYe7JngMxN6Z59ZDOXYlqPUV7WW7uZpirt3ftDezSPZ8flFSAcoSzhhHATiZsdCex7brKmwJCrZctsUq5oq7L2WyHowFBRddEICYg7qqfO0o7iAStw5l99EHwOJePd3a45Thzn9a-cBA5jwBtCsBYg_f831f109-e742-4a35-8715-8d682d6890b7.jpg",
+            "step_title": "Encapsulamos tu café",
+            "step_desc": "Tecnología de última generación para conservar todo el aroma y la frescura."
+          }
+        },
+        "step_M7Bdnp": {
+          "type": "step",
+          "settings": {
+            "step_image": "shopify://shop_images/WhatsApp_Image_2025-11-21_at_6.06.03_PM.webp",
+            "step_title": "Lleva tu marca al mercado",
+            "step_desc": "Recibe un producto listo para vender, regalar o sorprender a tus clientes."
+          }
+        }
+      },
+      "block_order": [
+        "step_9qGJgB",
+        "step_TPzgTT",
+        "step_eTJzia",
+        "step_M7Bdnp"
+      ],
+      "name": "Maquila de Café",
+      "settings": {
+        "hero_image": "shopify://shop_images/suscripciones-de-caf-montecapra.png",
+        "hero_eyebrow": "MAQUILA DE CAFÉ EN CÁPSULAS",
+        "hero_title": "Convierte tu café en una experiencia de marca",
+        "hero_desc": "Creamos cápsulas de café premium para marcas, hoteles, restaurantes y empresas que buscan ofrecer una experiencia única, con la calidad y respaldo de MonteCapra.",
+        "btn_text": "Crear mi proyecto",
+        "btn_url": "",
+        "steps_eyebrow": "CÓMO FUNCIONA",
+        "steps_title": "De una idea a tu propia cápsula",
+        "cta_eyebrow": "TU MARCA, NUESTRO CAFÉ",
+        "cta_title": "Tu marca merece un café a la altura de su historia.",
+        "cta_desc": "Hablemos de tu proyecto y creamos juntos una experiencia de café única.",
+        "cta_btn_text": "Hablemos de tu proyecto",
+        "cta_btn_url": "",
+        "cta_image": "shopify://shop_images/Monte-Capra29584.webp",
+        "cta_bg_color": "#655949",
+        "cta_text_color": "#ffffff",
+        "cta_btn_bg": "#ffffff",
+        "cta_btn_text_color": "#23160f",
+        "background_color": "#f7a825",
+        "text_color": "#23160f",
+        "accent_color": "#6b4a2f",
+        "button_color": "#23160f",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "montecapra_origen_h6iaz3": {
+      "type": "montecapra-origen",
+      "blocks": {
+        "step_wRhCrh": {
+          "type": "step",
+          "settings": {
+            "number": "01.",
+            "title": "Origen",
+            "description": "Cafés colombianos seleccionados desde regiones con condiciones únicas de clima y suelo.",
+            "image": "shopify://shop_images/cereza-de-caf-planta.png",
+            "image_alt": "Cereza de café en planta"
+          }
+        },
+        "step_KgxCQE": {
+          "type": "step",
+          "settings": {
+            "number": "02.",
+            "title": "Selección",
+            "description": "Elegimos granos con perfiles de sabor excepcionales que representan lo mejor de nuestro país.",
+            "image": "shopify://shop_images/elegimos-granos-con-perfiles-de-sabor-excepcionales-que-representan-lo-mejor-de-nuestro-pa-s.png",
+            "image_alt": "Cereza de café en planta"
+          }
+        },
+        "step_ardxKm": {
+          "type": "step",
+          "settings": {
+            "number": "03.",
+            "title": "Transformación",
+            "description": "Tostamos y encapsulamos con tecnología de última generación para conservar todo el aroma, frescura y carácter del café.",
+            "image": "shopify://shop_images/c-psula-montecapra.png",
+            "image_alt": "Cereza de café en planta"
+          }
+        },
+        "step_aAigeK": {
+          "type": "step",
+          "settings": {
+            "number": "04.",
+            "title": "Tu taza",
+            "description": "El resultado es una experiencia de café premium, lista para disfrutar en cualquier momento.",
+            "image": "shopify://shop_images/tu-taza-de-caf-premium.png",
+            "image_alt": "Cereza de café en planta"
+          }
+        }
+      },
+      "block_order": [
+        "step_wRhCrh",
+        "step_KgxCQE",
+        "step_ardxKm",
+        "step_aAigeK"
+      ],
+      "name": "Origen MonteCapra",
+      "settings": {
+        "hero_eyebrow": "DE COLOMBIA A TU TAZA",
+        "hero_heading": "Todo comienza en el origen",
+        "hero_description": "<p>Creemos que una gran taza de café comienza mucho antes de llegar a tus manos.</p>",
+        "hero_image": "shopify://shop_images/caficultor-en-las-monta-as.png",
+        "hero_image_alt": "Caficultor en origen cosechando café colombiano",
+        "hero_image_height_desktop": 340,
+        "hero_image_height_mobile": 320,
+        "hero_image_fit": "cover",
+        "hero_image_position": "center",
+        "hero_image_side": "right",
+        "hero_radius": 24,
+        "story_button_label": "Conoce más",
+        "story_button_link": "",
+        "process_eyebrow": "UN PROCESO QUE HONRA EL CAFÉ",
+        "process_heading": "Del origen a una experiencia única",
+        "closing_image": "shopify://shop_images/montecapra-origen-y-prop-sito.png",
+        "closing_image_alt": "Manos sosteniendo cerezas de café colombiano",
+        "closing_image_height_desktop": 800,
+        "closing_image_height_mobile": 380,
+        "closing_image_fit": "cover",
+        "closing_image_position": "center",
+        "closing_eyebrow": "DEL ORIGEN CONSERVAMOS LO ESENCIAL",
+        "closing_heading": "El aroma.\nEl carácter.\nLa historia.",
+        "closing_text": "<p>Cada cápsula de MonteCapra es el resultado de un trabajo que respeta la tierra, valora a las personas que la cultivan y lleva la riqueza del café colombiano a una experiencia única en tu taza.</p>",
+        "impact_button_label": "Nuestro impacto",
+        "impact_button_link": "",
+        "background_color": "#f7f4ef",
+        "dark_color": "#173c2a",
+        "text_color": "#1e2d22",
+        "secondary_text_color": "#6f6a63",
+        "accent_color": "#a87845",
+        "light_background": "#f5f0e8",
+        "button_color": "#173c2a",
+        "button_text_color": "#ffffff",
+        "max_width": 1300,
+        "section_padding_top": 80,
+        "section_padding_bottom": 20,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40,
+        "gap_hero_process": 80,
+        "gap_process_closing": 80
       }
     }
   },
@@ -138,6 +402,9 @@
     "image_banner",
     "hero_montecapra_dbdkw9",
     "montecapra_marquee_mfjLF4",
-    "montecapra_productos_editorial_HLHyyd"
+    "montecapra_productos_editorial_HLHyyd",
+    "montecapra_suscripciones_4BiCEm",
+    "montecapra_maquila_gYBgwT",
+    "montecapra_origen_h6iaz3"
   ]
 }
