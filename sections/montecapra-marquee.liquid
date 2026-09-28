@@ -12,7 +12,7 @@
   <div
     id="MontecapraMarquee-{{ section.id }}"
     class="montecapra-marquee"
-    style="--montecapra-marquee-background: {{ section.settings.background_color }}; --montecapra-marquee-text: {{ section.settings.text_color }}; --montecapra-marquee-gap: {{ section.settings.item_gap }}px; --montecapra-marquee-duration: {{ section.settings.speed | times: 1000 }}ms;"
+    style="--montecapra-marquee-background: {{ section.settings.background_color }}; --montecapra-marquee-text: {{ section.settings.text_color }}; --montecapra-marquee-gap: {{ section.settings.item_gap }}px; --montecapra-marquee-duration: {{ section.settings.speed | times: 1000 }}ms; --montecapra-marquee-font-size: {{ section.settings.font_size }}px;"
   >
     <div class="montecapra-marquee__viewport">
       <div class="montecapra-marquee__track">
@@ -70,7 +70,7 @@
     align-items: center;
     gap: var(--montecapra-marquee-gap, 32px);
     white-space: nowrap;
-    font-size: 14px;
+    font-size: var(--montecapra-marquee-font-size, 14px);
     line-height: 1.4;
   }
 
@@ -100,7 +100,7 @@
     }
 
     .montecapra-marquee__message {
-      font-size: 13px;
+      font-size: var(--montecapra-marquee-font-size, 14px);
     }
   }
 
@@ -134,6 +134,16 @@
       "id": "text_color",
       "label": "Color del texto",
       "default": "#FAF8F3"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de letra",
+      "default": 14
     },
     {
       "type": "range",

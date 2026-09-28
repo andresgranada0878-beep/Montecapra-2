@@ -31,11 +31,19 @@
         "slide_jDG46D": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/BQP-tdYj_978H5K93bANimDpb1WS1p2varYe7JngMxN6Z59ZDOXYlqPUV7WW7uZpirt3ftDezSPZ8flFSAcoSzhhHATiZsdCex7brKmwJCrZctsUq5oq7L2WyHowFBRddEICYg7qqfO0o7iAStw5l99EHwOJePd3a45Thzn9a-cBA5jwBtCsBYg.jpg",
+            "image_desktop": "shopify://shop_images/caf-colombiano.png",
+            "eyebrow": "",
+            "eyebrow_size": 12,
             "title": "Café colombiano de origen",
+            "title_size": 56,
             "text": "<p>Una experiencia de café de especialidad desde las montañas de Colombia.</p>",
+            "text_size": 18,
             "button_label": "Descubre nuestro café",
             "link": "shopify://collections/all",
+            "button_style": "solid",
+            "button_radius": 2,
+            "button_background": "#23160f",
+            "button_text_color": "#faf8f3",
             "content_position": "middle-left"
           }
         },
@@ -43,10 +51,18 @@
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/header-montecapra-c-psulas-de-caf-colombiano.png",
+            "eyebrow": "",
+            "eyebrow_size": 12,
             "title": "",
+            "title_size": 56,
             "text": "",
+            "text_size": 18,
             "button_label": "",
             "link": "",
+            "button_style": "solid",
+            "button_radius": 2,
+            "button_background": "#23160f",
+            "button_text_color": "#faf8f3",
             "content_position": "middle-left"
           }
         }
@@ -56,58 +72,72 @@
         "slide_RWwRdx"
       ],
       "name": "Hero Montecapra",
-      "settings": {}
+      "settings": {
+        "overlay_opacity": 30,
+        "fade_duration": 500,
+        "ken_burns_duration": 12,
+        "content_animation": "fade-up",
+        "hero_height": 760
+      }
     },
-    "montecapra_productos_editorial_HLHyyd": {
-      "type": "montecapra-productos-editorial",
+    "montecapra_marquee_mfjLF4": {
+      "type": "montecapra-marquee",
       "blocks": {
-        "producto_XwzGFd": {
-          "type": "producto",
+        "message_gqF3w8": {
+          "type": "message",
           "settings": {
-            "producto": ""
+            "text": "<strong>nexxpress</strong>"
           }
         },
-        "producto_Wz9Qrf": {
-          "type": "producto",
+        "message_DCy6Ld": {
+          "type": "message",
           "settings": {
-            "producto": ""
+            "text": "Prueba 50%"
           }
         },
-        "producto_gYDPMe": {
-          "type": "producto",
+        "message_rWhMwA": {
+          "type": "message",
           "settings": {
-            "producto": ""
+            "text": "Montecapra Capsulas"
           }
         },
-        "producto_TrrCn4": {
-          "type": "producto",
+        "message_QBW3Y8": {
+          "type": "message",
           "settings": {
-            "producto": ""
-          }
-        },
-        "producto_YEcpCU": {
-          "type": "producto",
-          "settings": {
-            "producto": ""
+            "text": "Susucribete"
           }
         }
       },
       "block_order": [
-        "producto_XwzGFd",
-        "producto_Wz9Qrf",
-        "producto_gYDPMe",
-        "producto_TrrCn4",
-        "producto_YEcpCU"
+        "message_gqF3w8",
+        "message_DCy6Ld",
+        "message_rWhMwA",
+        "message_QBW3Y8"
       ],
+      "name": "Marquee Montecapra",
+      "settings": {
+        "background_color": "#fcc986",
+        "text_color": "#000000",
+        "font_size": 14,
+        "item_gap": 52,
+        "speed": 40
+      }
+    },
+    "montecapra_productos_editorial_HLHyyd": {
+      "type": "montecapra-productos-editorial",
       "name": "Productos MonteCapra",
       "settings": {
-        "titulo": "Nuestros cafés"
+        "titulo": "Nuestros cafés",
+        "collection": "cafes-montecapra",
+        "columns_desktop": "4",
+        "columns_mobile": "2"
       }
     }
   },
   "order": [
     "image_banner",
     "hero_montecapra_dbdkw9",
+    "montecapra_marquee_mfjLF4",
     "montecapra_productos_editorial_HLHyyd"
   ]
 }

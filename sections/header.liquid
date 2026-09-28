@@ -372,7 +372,40 @@
 
 .montecapra-header-principal {
 
+  position:relative;
+
   padding:25px 20px;
+
+  justify-content:space-between;
+
+}
+
+.montecapra-header-derecha {
+
+  gap:8px;
+
+  flex:0 0 auto;
+
+}
+
+.montecapra-icono {
+
+  font-size:11px;
+
+  letter-spacing:0;
+
+}
+
+
+.montecapra-logo {
+
+  position:absolute;
+
+  top:50%;
+
+  left:50%;
+
+  transform:translate(-50%,-50%);
 
 }
 
@@ -388,7 +421,7 @@
 
 .montecapra-logo img {
 
-  max-width:160px;
+  max-width:min(150px, calc(100vw - 220px));
 
 }
 
@@ -396,11 +429,15 @@
 
 .montecapra-navegacion {
 
-  gap:18px;
+  width:100%;
 
-  overflow:auto;
+  box-sizing:border-box;
 
-  justify-content:flex-start;
+  gap:8px;
+
+  overflow-x:auto;
+
+  justify-content:safe center;
 
 }
 

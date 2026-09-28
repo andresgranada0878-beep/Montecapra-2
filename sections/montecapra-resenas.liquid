@@ -1,0 +1,462 @@
+{% liquid
+  assign review_blocks = section.blocks | where: 'type', 'review'
+  assign desktop_visible = section.settings.desktop_visible | default: 3
+%}
+
+<section
+  id="MontecapraReviews-{{ section.id }}"
+  class="montecapra-reviews"
+  {% if section.settings.heading != blank %}aria-labelledby="MontecapraReviewsHeading-{{ section.id }}"{% endif %}
+  style="--montecapra-reviews-visible: {{ desktop_visible }};"
+>
+  <div class="montecapra-reviews__container">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <header class="montecapra-reviews__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="montecapra-reviews__heading" id="MontecapraReviewsHeading-{{ section.id }}">
+            {{ section.settings.heading | escape }}
+          </h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="montecapra-reviews__subheading">{{ section.settings.subheading | escape }}</p>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    {% if review_blocks.size > 0 %}
+      <ul class="montecapra-reviews__grid" role="list">
+        {% for block in review_blocks %}
+          {% liquid
+            assign visual_image = block.settings.customer_photo
+            if visual_image == blank
+              assign visual_image = block.settings.related_product_image
+            endif
+            if visual_image == blank and block.settings.related_product != blank
+              assign visual_image = block.settings.related_product.featured_image
+            endif
+
+            assign product_tag_image = block.settings.related_product_image
+            if product_tag_image == blank and block.settings.related_product != blank
+              assign product_tag_image = block.settings.related_product.featured_image
+            endif
+          %}
+          <li class="montecapra-reviews__card{% if visual_image == blank %} montecapra-reviews__card--no-image{% endif %}" {{ block.shopify_attributes }}>
+            {% if visual_image != blank %}
+              <div class="montecapra-reviews__visual">
+                {{
+                  visual_image
+                  | image_url: width: 640
+                  | image_tag:
+                    widths: '320, 480, 640',
+                    sizes: '(min-width: 990px) 30vw, 85vw',
+                    loading: 'lazy',
+                    alt: block.settings.customer_name,
+                    class: 'montecapra-reviews__visual-image'
+                }}
+              </div>
+            {% endif %}
+
+            <div class="montecapra-reviews__body">
+              {% if block.settings.comment != blank %}
+                <p class="montecapra-reviews__comment">{{ block.settings.comment | escape }}</p>
+              {% endif %}
+
+              <div class="montecapra-reviews__meta">
+                <div class="montecapra-reviews__author">
+                  {% if block.settings.customer_name != blank %}
+                    <strong class="montecapra-reviews__author-name">{{ block.settings.customer_name | escape }}</strong>
+                  {% endif %}
+                  {% if block.settings.customer_city != blank %}
+                    <span class="montecapra-reviews__author-city">{{ block.settings.customer_city | escape }}</span>
+                  {% endif %}
+                </div>
+
+                {% if block.settings.rating > 0 %}
+                  <div class="montecapra-reviews__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
+                    {% for i in (1..5) %}
+                      <span class="montecapra-reviews__star{% if i > block.settings.rating %} montecapra-reviews__star--empty{% endif %}">★</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              {% if block.settings.related_product != blank %}
+                <a href="{{ block.settings.related_product.url }}" class="montecapra-reviews__product">
+                  {% if product_tag_image != blank %}
+                    {{
+                      product_tag_image
+                      | image_url: width: 64
+                      | image_tag:
+                        widths: '32, 64',
+                        sizes: '32px',
+                        loading: 'lazy',
+                        alt: block.settings.related_product.title,
+                        class: 'montecapra-reviews__product-image'
+                    }}
+                  {% endif %}
+                  <span>Disfrutó: {{ block.settings.related_product.title }}</span>
+                </a>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+
+{% style %}
+  #MontecapraReviews-{{ section.id }} {
+    --montecapra-reviews-bg: {{ section.settings.section_background }};
+    --montecapra-reviews-card-bg: {{ section.settings.card_background }};
+    --montecapra-reviews-text: {{ section.settings.text_color }};
+    --montecapra-reviews-accent: {{ section.settings.accent_color }};
+    --montecapra-reviews-star: {{ section.settings.star_color }};
+    --montecapra-reviews-radius: {{ section.settings.card_radius }}px;
+    padding: 80px 24px;
+    background: var(--montecapra-reviews-bg, #f7f4ef);
+    color: var(--montecapra-reviews-text, #23160f);
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__header {
+    max-width: 640px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__heading {
+    margin: 0;
+    color: inherit;
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__subheading {
+    margin: 14px 0 0;
+    color: inherit;
+    opacity: 0.75;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--montecapra-reviews-visible, 3), minmax(0, 1fr));
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(35, 22, 15, 0.08);
+    border-radius: var(--montecapra-reviews-radius, 18px);
+    background: var(--montecapra-reviews-card-bg, #fff);
+    box-shadow: 0 10px 28px rgba(35, 22, 15, 0.06);
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    background: #eee9e1;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 45%;
+    background: linear-gradient(to top, var(--montecapra-reviews-card-bg, #fff), transparent);
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__body {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 28px 26px 26px;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__card--no-image .montecapra-reviews__body {
+    padding-top: 34px;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__body::before {
+    content: '\201C';
+    position: absolute;
+    top: -4px;
+    left: 20px;
+    color: var(--montecapra-reviews-accent, #6b4a2f);
+    font-size: 64px;
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1;
+    opacity: 0.16;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__comment {
+    position: relative;
+    margin: 0 0 22px;
+    color: inherit;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.55;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid rgba(35, 22, 15, 0.1);
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__author {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__author-name {
+    color: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__author-city {
+    color: inherit;
+    opacity: 0.6;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__stars {
+    display: flex;
+    flex-shrink: 0;
+    gap: 2px;
+    color: var(--montecapra-reviews-star, #b8863b);
+    font-size: 11px;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__star--empty {
+    opacity: 0.25;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(35, 22, 15, 0.1);
+    color: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__product:hover {
+    color: var(--montecapra-reviews-accent, #6b4a2f);
+  }
+
+  #MontecapraReviews-{{ section.id }} .montecapra-reviews__product-image {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    #MontecapraReviews-{{ section.id }} .montecapra-reviews__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #MontecapraReviews-{{ section.id }} {
+      padding: 52px 0;
+    }
+
+    #MontecapraReviews-{{ section.id }} .montecapra-reviews__container {
+      padding: 0 16px;
+    }
+
+    #MontecapraReviews-{{ section.id }} .montecapra-reviews__header {
+      margin-bottom: 32px;
+    }
+
+    #MontecapraReviews-{{ section.id }} .montecapra-reviews__heading {
+      font-size: 26px;
+    }
+
+    #MontecapraReviews-{{ section.id }} .montecapra-reviews__grid {
+      display: flex;
+      gap: 16px;
+      margin: 0 -16px;
+      padding: 0 16px 8px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #MontecapraReviews-{{ section.id }} .montecapra-reviews__card {
+      width: 82vw;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+
+    #MontecapraReviews-{{ section.id }} .montecapra-reviews__visual {
+      aspect-ratio: 4 / 3;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Rese\u00f1as de clientes",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "T\u00edtulo",
+      "default": "Lo que dice nuestra comunidad"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subt\u00edtulo",
+      "default": "Experiencias reales de quienes ya disfrutan MonteCapra"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Fondo de secci\u00f3n",
+      "default": "#f7f4ef"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Fondo de tarjetas",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#23160f"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento",
+      "default": "#6b4a2f"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Color de estrellas",
+      "default": "#b8863b"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Radio de bordes",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "desktop_visible",
+      "label": "Rese\u00f1as visibles en escritorio",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Rese\u00f1a",
+      "settings": [
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Nombre del cliente"
+        },
+        {
+          "type": "text",
+          "id": "customer_city",
+          "label": "Ciudad"
+        },
+        {
+          "type": "image_picker",
+          "id": "customer_photo",
+          "label": "Foto del cliente (opcional)"
+        },
+        {
+          "type": "textarea",
+          "id": "comment",
+          "label": "Comentario"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Estrellas",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "product",
+          "id": "related_product",
+          "label": "Producto asociado (opcional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "related_product_image",
+          "label": "Imagen del producto (opcional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rese\u00f1as de clientes",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

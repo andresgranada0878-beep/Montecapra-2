@@ -1,0 +1,661 @@
+{% liquid
+  assign step_blocks = section.blocks | where: 'type', 'step'
+  assign plan_blocks = section.blocks | where: 'type', 'plan'
+%}
+
+<section
+  id="MontecapraSubscriptions-{{ section.id }}"
+  class="montecapra-configurator"
+  {% if section.settings.heading != blank %}aria-labelledby="MontecapraSubscriptionsHeading-{{ section.id }}"{% endif %}
+>
+  <div class="montecapra-configurator__container">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <header class="montecapra-configurator__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="montecapra-configurator__heading" id="MontecapraSubscriptionsHeading-{{ section.id }}">
+            {{ section.settings.heading | escape }}
+          </h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="montecapra-configurator__subheading">{{ section.settings.subheading | escape }}</p>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    <div class="montecapra-configurator__layout">
+      <div
+        class="montecapra-configurator__media"
+        {% if section.settings.lifestyle_image != blank %}
+          style="--montecapra-configurator-media-ratio: {{ section.settings.lifestyle_image.aspect_ratio | default: 0.8 }};"
+        {% endif %}
+      >
+        {% if section.settings.lifestyle_image != blank %}
+          {{
+            section.settings.lifestyle_image
+            | image_url: width: 1400
+            | image_tag:
+              widths: '480, 720, 960, 1200, 1400',
+              sizes: '(min-width: 990px) 44vw, 100vw',
+              loading: 'lazy',
+              alt: section.settings.lifestyle_image_alt | default: section.settings.heading,
+              class: 'montecapra-configurator__image'
+          }}
+        {% endif %}
+      </div>
+
+      <div class="montecapra-configurator__panel">
+        {% if step_blocks.size > 0 %}
+          <ol class="montecapra-configurator__steps">
+            {% for block in step_blocks %}
+              <li class="montecapra-configurator__step" {{ block.shopify_attributes }}>
+                <span class="montecapra-configurator__step-number">{{ forloop.index }}</span>
+                <div>
+                  {% if block.settings.step_title != blank %}
+                    <p class="montecapra-configurator__step-title">{{ block.settings.step_title | escape }}</p>
+                  {% endif %}
+                  {% if block.settings.step_description != blank %}
+                    <p class="montecapra-configurator__step-description">{{ block.settings.step_description | escape }}</p>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+
+        {% if plan_blocks.size > 0 %}
+          <div class="montecapra-configurator__interactive">
+            {% for block in plan_blocks %}
+              <input
+                type="radio"
+                name="montecapra-plan-{{ section.id }}"
+                id="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"
+                class="montecapra-configurator__radio"
+                {% if forloop.first %}checked{% endif %}
+              >
+            {% endfor %}
+
+            <div class="montecapra-configurator__options" role="list">
+              {% for block in plan_blocks %}
+                <label
+                  for="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"
+                  class="montecapra-configurator__option"
+                  {{ block.shopify_attributes }}
+                >
+                  {% if block.settings.featured and block.settings.featured_label != blank %}
+                    <span class="montecapra-configurator__option-badge">{{ block.settings.featured_label | escape }}</span>
+                  {% endif %}
+                  <span class="montecapra-configurator__option-name">{{ block.settings.plan_name | escape }}</span>
+                  {% if block.settings.capsule_count != blank %}
+                    <span class="montecapra-configurator__option-meta">{{ block.settings.capsule_count | escape }}</span>
+                  {% endif %}
+                  {% if block.settings.price != blank %}
+                    <span class="montecapra-configurator__option-price">{{ block.settings.price | escape }}</span>
+                  {% endif %}
+                </label>
+              {% endfor %}
+            </div>
+
+            <div class="montecapra-configurator__summaries">
+              {% for block in plan_blocks %}
+                <div class="montecapra-configurator__summary" data-plan-index="{{ forloop.index }}">
+                  {% if block.settings.image != blank %}
+                    {{
+                      block.settings.image
+                      | image_url: width: 480
+                      | image_tag:
+                        widths: '240, 360, 480',
+                        sizes: '160px',
+                        loading: 'lazy',
+                        alt: block.settings.plan_name,
+                        class: 'montecapra-configurator__summary-image'
+                    }}
+                  {% endif %}
+
+                  {% if block.settings.plan_description != blank %}
+                    <p class="montecapra-configurator__summary-description">{{ block.settings.plan_description | escape }}</p>
+                  {% endif %}
+
+                  {% if block.settings.frequency != blank %}
+                    <p class="montecapra-configurator__summary-frequency">
+                      {% case block.settings.frequency %}
+                        {% when 'weekly' %}Entrega semanal
+                        {% when 'biweekly' %}Entrega quincenal
+                        {% when 'monthly' %}Entrega mensual
+                      {% endcase %}
+                    </p>
+                  {% endif %}
+
+                  {% if block.settings.price != blank %}
+                    <p class="montecapra-configurator__summary-price">{{ block.settings.price | escape }}</p>
+                  {% endif %}
+
+                  {% if block.settings.highlight != blank %}
+                    <p class="montecapra-configurator__summary-highlight">{{ block.settings.highlight | escape }}</p>
+                  {% endif %}
+
+                  {% if block.settings.button_label != blank %}
+                    <a
+                      href="{{ block.settings.button_link | default: '#' }}"
+                      class="montecapra-configurator__summary-button"
+                    >
+                      {{ block.settings.button_label | escape }}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% style %}
+  #MontecapraSubscriptions-{{ section.id }} {
+    --montecapra-configurator-bg: {{ section.settings.section_background }};
+    --montecapra-configurator-panel-bg: {{ section.settings.card_background }};
+    --montecapra-configurator-text: {{ section.settings.text_color }};
+    --montecapra-configurator-accent: {{ section.settings.accent_color }};
+    --montecapra-configurator-button: {{ section.settings.button_color }};
+    --montecapra-configurator-radius: {{ section.settings.card_radius }}px;
+    padding: 80px 24px;
+    background: var(--montecapra-configurator-bg, #f7f4ef);
+    color: var(--montecapra-configurator-text, #23160f);
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__header {
+    max-width: 640px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__heading {
+    margin: 0;
+    color: inherit;
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__subheading {
+    margin: 14px 0 0;
+    color: inherit;
+    opacity: 0.75;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__media {
+    position: relative;
+    top: 0;
+    overflow: hidden;
+    border-radius: calc(var(--montecapra-configurator-radius, 20px) + 6px);
+    aspect-ratio: var(--montecapra-configurator-media-ratio, 0.8);
+    max-height: 82vh;
+    min-height: 320px;
+    background: #eee9e1;
+    box-shadow: 0 20px 48px rgba(35, 22, 15, 0.14);
+  }
+
+  @media screen and (min-width: 990px) {
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__media {
+      position: sticky;
+      top: 32px;
+    }
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__image {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--montecapra-configurator-image-position, center);
+    filter: saturate(1.05) contrast(1.03);
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__panel {
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    border-radius: var(--montecapra-configurator-radius, 20px);
+    background: var(--montecapra-configurator-panel-bg, #fff);
+    box-shadow: 0 8px 28px rgba(35, 22, 15, 0.05);
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0 0 28px;
+    padding: 0;
+    list-style: none;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step-number {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--montecapra-configurator-accent, #6b4a2f);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step-title {
+    margin: 4px 0 0;
+    color: inherit;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__step-description {
+    margin: 2px 0 0;
+    color: inherit;
+    opacity: 0.7;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(35, 22, 15, 0.1);
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 22px;
+    border: 1px solid rgba(35, 22, 15, 0.12);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: border-color 220ms ease, background-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(35, 22, 15, 0.08);
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-badge {
+    position: absolute;
+    top: -10px;
+    right: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--montecapra-configurator-accent, #6b4a2f);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-name {
+    color: inherit;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-meta {
+    color: inherit;
+    opacity: 0.7;
+    font-size: 12px;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option-price {
+    color: var(--montecapra-configurator-accent, #6b4a2f);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summaries {
+    margin-top: 24px;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary {
+    display: none;
+    padding-top: 4px;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-image {
+    width: 100%;
+    max-width: 180px;
+    margin-bottom: 20px;
+    border-radius: calc(var(--montecapra-configurator-radius, 20px) - 4px);
+    object-fit: cover;
+    box-shadow: 0 10px 24px rgba(35, 22, 15, 0.1);
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-description {
+    margin: 0 0 10px;
+    color: inherit;
+    opacity: 0.8;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-frequency {
+    margin: 0 0 14px;
+    color: inherit;
+    opacity: 0.7;
+    font-size: 13px;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-price {
+    margin: 0;
+    color: var(--montecapra-configurator-accent, #6b4a2f);
+    font-size: 26px;
+    font-weight: 700;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-highlight {
+    margin: 8px 0 0;
+    color: inherit;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-button {
+    display: inline-flex;
+    width: 100%;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 22px;
+    padding: 12px 24px;
+    border: 1px solid var(--montecapra-configurator-button, #23160f);
+    border-radius: 999px;
+    background: var(--montecapra-configurator-button, #23160f);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  {% for block in plan_blocks %}
+    #MontecapraSubscriptions-{{ section.id }} #MontecapraPlan-{{ section.id }}-{{ forloop.index }}:checked ~ .montecapra-configurator__options label[for="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"] {
+      border-color: var(--montecapra-configurator-accent, #6b4a2f);
+      background: rgba(107, 74, 47, 0.06);
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} #MontecapraPlan-{{ section.id }}-{{ forloop.index }}:checked ~ .montecapra-configurator__summaries .montecapra-configurator__summary[data-plan-index="{{ forloop.index }}"] {
+      display: block;
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} #MontecapraPlan-{{ section.id }}-{{ forloop.index }}:focus-visible ~ .montecapra-configurator__options label[for="MontecapraPlan-{{ section.id }}-{{ forloop.index }}"] {
+      outline: 2px solid var(--montecapra-configurator-accent, #6b4a2f);
+      outline-offset: 2px;
+    }
+  {% endfor %}
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option:hover {
+      border-color: var(--montecapra-configurator-accent, #6b4a2f);
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(35, 22, 15, 0.14);
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__media {
+      max-height: 60vh;
+      min-height: 260px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #MontecapraSubscriptions-{{ section.id }} {
+      padding: 52px 16px;
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__header {
+      margin-bottom: 32px;
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__heading {
+      font-size: 26px;
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__panel {
+      padding: 22px;
+    }
+
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__options {
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__option,
+    #MontecapraSubscriptions-{{ section.id }} .montecapra-configurator__summary-button {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Suscripciones café",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Tu café favorito, siempre listo"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Personaliza tu suscripción y recibe MonteCapra en la puerta de tu casa"
+    },
+    {
+      "type": "image_picker",
+      "id": "lifestyle_image",
+      "label": "Imagen lifestyle"
+    },
+    {
+      "type": "text",
+      "id": "lifestyle_image_alt",
+      "label": "Texto alternativo de la imagen"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Fondo de sección",
+      "default": "#f7f4ef"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Fondo de tarjetas",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#23160f"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento (plan destacado)",
+      "default": "#6b4a2f"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color de botón",
+      "default": "#23160f"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Radio de bordes de tarjetas",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Paso",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step_title",
+          "label": "Título del paso"
+        },
+        {
+          "type": "textarea",
+          "id": "step_description",
+          "label": "Descripción"
+        }
+      ]
+    },
+    {
+      "type": "plan",
+      "name": "Plan de suscripción",
+      "settings": [
+        {
+          "type": "text",
+          "id": "plan_name",
+          "label": "Nombre del plan",
+          "default": "Explorador"
+        },
+        {
+          "type": "textarea",
+          "id": "plan_description",
+          "label": "Descripción"
+        },
+        {
+          "type": "text",
+          "id": "capsule_count",
+          "label": "Cantidad de cápsulas",
+          "default": "20 cápsulas"
+        },
+        {
+          "type": "select",
+          "id": "frequency",
+          "label": "Frecuencia de entrega",
+          "options": [
+            { "value": "weekly", "label": "Semanal" },
+            { "value": "biweekly", "label": "Quincenal" },
+            { "value": "monthly", "label": "Mensual" }
+          ],
+          "default": "monthly"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Precio (texto)",
+          "default": "$65.000/mes"
+        },
+        {
+          "type": "text",
+          "id": "highlight",
+          "label": "Beneficio destacado",
+          "default": "Envío gratis"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Marcar como plan recomendado",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "featured_label",
+          "label": "Etiqueta de destacado",
+          "default": "Más popular"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen opcional"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Texto del botón",
+          "default": "Elegir plan"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Enlace del botón"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Suscripciones café",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "plan" },
+        { "type": "plan" },
+        { "type": "plan" }
+      ]
+    }
+  ]
+}
+{% endschema %}
